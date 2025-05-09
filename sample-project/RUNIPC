@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd ~/CS447Project/proj-skeleton
+./clean.sh
+echo -e "\033[38;5;148m-----------MAY CONTAIN ERROR MESSAGE-----------------------"
+make bugdetector
+echo -e "------------------------------------------------\033[39m"
+cd ipctest
+ rm testipc.*
+ rm main.bc
+ make
+ echo -e "\033[38;5;148m-----------OUT PUT , CHECK ERROR FIRST-----------------------"
+cat testipc_3_65.out
+echo -e "------------------------------------------------\033[39m"

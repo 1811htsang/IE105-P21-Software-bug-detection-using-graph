@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd ~/proj-skeleton
+./clean.sh
+echo -e "\033[38;5;148m-----------MAY CONTAIN ERROR MESSAGE-----------------------"
+make pipair
+echo -e "------------------------------------------------\033[39m"
+cd test1
+ make
+ echo -e "\033[38;5;148m-----------OUT PUT , CHECK ERROR FIRST-----------------------"
+cat test1_10_80.out
+echo -e "------------------------------------------------\033[39m"

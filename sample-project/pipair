@@ -1,0 +1,4 @@
+#!/bin/bash
+
+g++ ../bugdetector.cpp -o ../bugdetector # compiling code with a different executable
+opt -passes=print-callgraph $1 2>&1 >/dev/null | ../bugdetector $2 $3 # this essentially does the same thing as before

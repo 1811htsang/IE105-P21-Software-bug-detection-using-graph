@@ -1,0 +1,6 @@
+bug: B in help1 pair: (A B) support: 4 confidence: 66.67%
+bug: B in scope2 pair: (B D) support: 5 confidence: 83.33%
+bug: A in scope3 pair: (A B) support: 4 confidence: 66.67%
+bug: A in help2 pair: (A B) support: 4 confidence: 66.67%
+bug: A in help2 pair: (A D) support: 4 confidence: 66.67%
+bug: D in help3 pair: (B D) support: 5 confidence: 71.43%
