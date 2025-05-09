@@ -1,0 +1,3 @@
+This repository is used to store some experiments, documentation about topic *Software Bug Detection using graph*, this topic related to subject *Introduction to information assurance and security* IE105 of VNUHCM-UIT.
+The folder `sample-project` is cloned from the repository [BugDetector](https://github.com/jkottapa/BugDetector.git), contains sample code to test the bug detection tool. Some files in this folder are modified to test the tool based on the location of selected libraries and the updated syntax of the opt tool from LLVM 15.0.7.
+The folder `recreate` contains the modified workflow to match the mentioned workflow from `recreate/Note.md`. 
