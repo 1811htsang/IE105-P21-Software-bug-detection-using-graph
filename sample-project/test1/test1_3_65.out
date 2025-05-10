@@ -1,0 +1,21 @@
+original bitcode :
+Call graph node <<null function>><<0x56118e9818f0>>  #uses=0
+  CS<None> calls function 'main'
+  CS<None> calls function 'printf'
+
+Call graph node for function: 'main'<<0x56118e9819b0>>  #uses=1
+  CS<0x56118e9905b0> calls function 'printf'
+
+Call graph node for function: 'printf'<<0x56118e984fb0>>  #uses=2
+  CS<None> calls external node
+
+function map :
+0 => main
+1 => printf
+
+Call functions :
+0 calls: 1 
+
+IPC Call functions :
+0 calls: 1 
+Learned Constraints :
