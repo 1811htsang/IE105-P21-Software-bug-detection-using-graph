@@ -35,34 +35,38 @@ public:
 
 // global variables
 vector<string> callgraph_tokens; // tokenize the callgraph, use to store the callgraph
-map<int, string> IDtoFunc; // to store the function ID to function name mapping f(ID) = name
-map<string, int> FunctoID; // to store the function name to function ID mapping f(name) = ID
+map<int, string> IDtoFunc;       // to store the function ID to function name mapping f(ID) = name
+map<string, int> FunctoID;       // to store the function name to function ID mapping f(name) = ID
 
 // global variables for basic total reduction
 map<int, vector<int>> FuncCallTotalReduction; // to store the function calls, f(ID) = vector of function IDs
-int maxID; // to store the maximum function ID
+int maxID;                                    // to store the maximum function ID
 
-//global variables for total reduction with edge weight
+// global variables for total reduction with edge weight
 map<int, map<int, int>> FuncCallTotalReductionWeight; // to store the function calls, f(ID) = vector of function IDs with edge weight
-int threshold; // to store the threshold for edge weight
+int threshold;                                        // to store the threshold for edge weight
 
-
-string demangle(const string& mangled_name) {
+string demangle(const string &mangled_name)
+{
     string command = "c++filt -t " + mangled_name;
-    FILE* pipe = popen(command.c_str(), "r");
-    if (!pipe) {
+    FILE *pipe = popen(command.c_str(), "r");
+    if (!pipe)
+    {
         return mangled_name; // Trả lại tên gốc nếu popen thất bại
     }
     char buffer[128];
     string result = "";
-    while (!feof(pipe)) {
-        if (fgets(buffer, 128, pipe) != NULL) {
+    while (!feof(pipe))
+    {
+        if (fgets(buffer, 128, pipe) != NULL)
+        {
             result += buffer;
         }
     }
     pclose(pipe);
     // Loại bỏ newline nếu có
-    if (!result.empty() && result.back() == '\n') {
+    if (!result.empty() && result.back() == '\n')
+    {
         result.pop_back();
     }
     return result;
@@ -75,14 +79,14 @@ string retFunctionName(const string &token)
     last = token.find_last_of("\'");
 
     return token.substr(first, last - first);
-} 
+}
 
 //*
 void extract_basic_total_reduction()
 {
     // initialize some parameters
     int ID = -1; // to store the function ID
-    int i; // to iterate through the callgraph tokens
+    int i;       // to iterate through the callgraph tokens
     string func, TopLevelFunc = "";
 
     // ignore unnecessary lines
@@ -119,8 +123,8 @@ void extract_basic_total_reduction()
                 ID++;
                 FunctoID[func] = ID;
                 IDtoFunc[ID] = func;
-            } 
-        } 
+            }
+        }
 
         // check if the line contains a function call
         // if it does, assign the function name to TopLevelFunc
@@ -159,10 +163,11 @@ void extract_basic_total_reduction()
     maxID = ID;
 }
 
-void extract_total_reduction_weight() {
-// initialize some parameters
+void extract_total_reduction_weight()
+{
+    // initialize some parameters
     int ID = -1; // to store the function ID
-    int i; // to iterate through the callgraph tokens
+    int i;       // to iterate through the callgraph tokens
     string func, TopLevelFunc = "";
 
     // ignore unnecessary lines
@@ -199,8 +204,8 @@ void extract_total_reduction_weight() {
                 ID++;
                 FunctoID[func] = ID;
                 IDtoFunc[ID] = func;
-            } 
-        } 
+            }
+        }
 
         // check if the line contains a function call
         // if it does, assign the function name to TopLevelFunc
@@ -215,12 +220,12 @@ void extract_total_reduction_weight() {
 
             func = retFunctionName(callgraph_tokens[i]);
 
-            // check if the function ID is already in the mapping 
+            // check if the function ID is already in the mapping
             // if it is, check if the function ID is already in the map
-                // if the function ID is already in the map
-                // count the number of times it appears and increment the edge weight
+            // if the function ID is already in the map
+            // count the number of times it appears and increment the edge weight
             // if it is not, add it to the map and increment the edge weight, in which based edge weight is set to 1
-            
+
             if (FuncCallTotalReductionWeight.find(FunctoID[TopLevelFunc]) != FuncCallTotalReductionWeight.end())
             {
                 // check if the function ID is already in the map
@@ -297,8 +302,6 @@ void inputCallgraph(vector<string> &callgraph_tokens)
     while (getline(cin, token))
     {                                      // read each line from standard input - stdin
         callgraph_tokens.push_back(token); // add non-empty lines to the vector
-
-        
     }
 }
 
