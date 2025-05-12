@@ -14,12 +14,12 @@ using namespace std;
 class FunctionPair
 {
 public:
-    int LeftFunction;
-    int RightFunction;
+    int a;
+    int b;
     int support;
     float confidence;
 
-    FunctionPair() : LeftFunction(0), RightFunction(0), support(0), confidence(-1) {}
+    FunctionPair() : a(0), b(0), support(0), confidence(-1) {}
 
     /*
         FunctionPair() : a(0), b(0), support(0), confidence(-1) {}
@@ -37,6 +37,10 @@ public:
 vector<string> callgraph_tokens; // tokenize the callgraph, use to store the callgraph
 map<int, string> IDtoFunc;       // to store the function ID to function name mapping f(ID) = name
 map<string, int> FunctoID;       // to store the function name to function ID mapping f(name) = ID
+unsigned int T_SUPPORT = 4;      // default support
+// suport is the number of times a function pair is called together
+unsigned int T_CONFIDENCE = 75; // default confidence
+// confidence is the percentage of times a function pair is called together
 
 // global variables for basic total reduction
 map<int, vector<int>> FuncCallTotalReduction; // to store the function calls, f(ID) = vector of function IDs
@@ -45,6 +49,8 @@ int maxID;                                    // to store the maximum function I
 // global variables for total reduction with edge weight
 map<int, map<int, int>> FuncCallTotalReductionWeight; // to store the function calls, f(ID) = vector of function IDs with edge weight
 int threshold;                                        // to store the threshold for edge weight
+
+vector<map<int, FunctionPair>> Pairs;
 
 string demangle(const string &mangled_name)
 {
@@ -81,7 +87,6 @@ string retFunctionName(const string &token)
     return token.substr(first, last - first);
 }
 
-//*
 void extract_basic_total_reduction()
 {
     // initialize some parameters
@@ -248,6 +253,118 @@ void extract_total_reduction_weight()
     maxID = ID;
 }
 
+void calculateSupport(vector<map<int, FunctionPair>> &Pairs, vector<int> &support)
+{
+    // Calculate support for each function and function pair
+    for (map<int, vector<int>>::iterator i = FuncCallTotalReduction.begin(); i != FuncCallTotalReduction.end(); ++i)
+    {
+        vector<int> &v = i->second;
+        // Go through all function pairs
+        for (int j = 0; j < v.size(); j++)
+        {
+            int a = v[j];
+            support[a]++;
+            for (int k = 0; k < v.size(); k++)
+            {
+                int b = v[k];
+                if (a != b)
+                {
+                    Pairs[a][b].support++;
+                    Pairs[a][b].a = a;
+                    Pairs[a][b].b = b;
+                }
+            }
+        }
+    }
+}
+
+void calculateConfidence(vector<map<int, FunctionPair>> &Pairs, vector<int> &support)
+{
+    // Calculate confidence for each function pair, and throw out any pairs that don't meet the thresholds
+    // Loop through all function pairs
+    map<int, FunctionPair>::iterator temp;
+    for (int i = 0; i < Pairs.size(); i++)
+    {
+        for (map<int, FunctionPair>::iterator j = Pairs[i].begin(); j != Pairs[i].end();)
+        {
+            FunctionPair &p = j->second;
+            temp = j;
+            ++j;
+            p.confidence = (float(p.support) * 100.0f) / float(support[p.a]);
+            if (p.support < T_SUPPORT || p.confidence < float(T_CONFIDENCE))
+            {
+                // Doesn't meet support or confidence threasholds
+                Pairs[i].erase(temp);
+            }
+        }
+    }
+}
+
+void analyze()
+{
+    Pairs = vector<map<int, FunctionPair>>(maxID + 1);
+    vector<int> support = vector<int>(maxID, 0);
+    int a = 0, b = 0;
+
+    // Calculate support for each function and function pair
+    calculateSupport(Pairs, support);
+
+    // Calculate confidence for each function pair, and throw out any pairs that don't meet the thresholds
+    // Loop through all function pairs
+    calculateConfidence(Pairs, support);
+}
+
+void find_bugs()
+{
+
+	bool found = false;
+	int a, b;
+	string pairname = "";
+
+    map<int, vector<int>> OriginalFuncCalls = FuncCallTotalReduction;
+
+	// Look through all top-level functions. OriginalFuncCalls is used because we only want to report each bug once,
+	//  in the function in which it was originally used.
+	for (map<int, vector<int>>::iterator i = OriginalFuncCalls.begin(); i != OriginalFuncCalls.end(); ++i)
+	{
+		vector<int> &v = i->second;
+		for (int q = 0; q < v.size(); q++)
+		{
+			a = v[q];
+			// Look for all the functions that should be used with any invocation of a
+			for (map<int, FunctionPair>::iterator j = Pairs[a].begin(); j != Pairs[a].end(); ++j)
+			{
+				found = false;
+				FunctionPair &p = j->second;
+				// See if we find a use of p.b
+				for (int k = 0; k < FuncCallTotalReduction[i->first].size(); k++)
+				{
+					b = FuncCallTotalReduction[i->first][k];
+					if (p.b == b)
+					{
+						found = true;
+						break;
+					}
+				} // for
+				if (!found)
+				{
+					// Admiral Ackbar says: "It's a bug!
+					if (IDtoFunc[p.a] < IDtoFunc[p.b])
+					{
+						pairname = IDtoFunc[p.a] + " " + IDtoFunc[p.b];
+					}
+					else
+					{
+						pairname = IDtoFunc[p.b] + " " + IDtoFunc[p.a];
+					}
+					cout << "bug: " << IDtoFunc[p.a] << " in " << IDtoFunc[i->first] << " pair: (" << pairname << ") ";
+					cout << "support: " << p.support << " confidence: " << fixed << setprecision(2) << p.confidence << "%" << endl;
+				}
+			} // for
+		} // for
+	} // for
+}
+
 void printBitcode(vector<string> &callgraph_tokens)
 {
     cout << "original bitcode :" << endl;
@@ -333,4 +450,13 @@ int main(int argc, char *argv[])
     // print the call functions with edge weight
     printCallFunctionsWeight(FuncCallTotalReductionWeight);
 #endif
+
+    // analyze the function calls and calculate the support and confidence
+    analyze();
+
+    // find the bugs in the function calls
+    find_bugs();
+
+    return 0;
+
 }

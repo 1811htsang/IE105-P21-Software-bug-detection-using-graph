@@ -9,8 +9,8 @@
 #define IPC_LEVELS 1 // default levels of inter-procedural analysis (1 turns it off completely)
 
 // GLOBAL DEFINITIONS
-unsigned int T_SUPPORT = 3;		 // default support
-unsigned int T_CONFIDENCE = 65;	 // default confidence
+unsigned int T_SUPPORT = 4;		 // default support
+unsigned int T_CONFIDENCE = 75;	 // default confidence
 vector<string> callgraph_tokens; // tokenize the callgraph
 map<int, string> IDtoFunc;
 map<string, int> FunctoID;
@@ -169,10 +169,10 @@ void analyze()
 					Pairs[a][b].support++;
 					Pairs[a][b].a = a;
 					Pairs[a][b].b = b;
-				} // if
-			} // for
-		} // for
-	} // for
+				} 
+			} 
+		} 
+	} 
 
 	// Calculate confidence for each function pair, and throw out any pairs that don't meet the thresholds
 	// Loop through all function pairs
@@ -189,10 +189,10 @@ void analyze()
 			{
 				// Doesn't meet support or confidence threasholds
 				Pairs[i].erase(temp);
-			} // if
-		} // for
-	} // for
-} //  analyze
+			}
+		} 
+	} 
+}
 
 void find_bugs()
 {
