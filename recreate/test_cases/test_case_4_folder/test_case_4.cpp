@@ -1,23 +1,32 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
-#define optimize()                                                             \\
-  ios_base::sync_with_stdio(0);                                                \\
-  cin.tie(0);                                                                  \\
-  cout.tie(0);
-#define endl '\\n'
-int main() {
-  optimize();
-  int i, j, k, n;
-  cin >> n;
-  long long sum = 0;
-  for (i = 1; i < n; i++) {
-    for (j = 1; j < n; j++) {
-      for (k = 1; k < n; k++) {
-        if (i * j + k == n)
-          sum++;
-      }
-    }
+
+void scope1() {
+  int i = 10;
+  while (i > 0) {
+    cout << i << endl;
+    i--;
   }
-  cout << sum << endl;
-  return 0;
+  cout << "Scope 1" << endl;
+}
+
+void scope2() {
+  cout << "Scope 2" << endl;
+}
+
+void recursion(int n, int m) {
+  if (n == 0) {
+    cout << m << endl;
+    scope1();
+    return;
+  }
+  recursion(n - 1, m + 1);
+}
+
+int main() {
+  int n;
+  int m;
+  m = 10;
+  n = 5;
+  recursion(n, m);
 }

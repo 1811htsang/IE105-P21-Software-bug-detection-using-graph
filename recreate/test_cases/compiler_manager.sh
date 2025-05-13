@@ -5,43 +5,46 @@
 
 #! /bin/bash
 
-# Thư mục gốc chứa các thư mục test_case_x_folder
+# Base directory containing test_case_x_folder directories
 BASE_DIR="/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases"
 
-# Duyệt qua từng thư mục test_case_x_folder
+# Loop through each test_case_x_folder directory
 for folder in "$BASE_DIR"/test_case_*_folder; 
 do
-    # Kiểm tra xem thư mục có tồn tại không
+    # Check if the directory exists
     if [ -d "$folder" ]; then
         echo "----------------------"
-        echo "Đang xử lý thư mục: $folder \n"
+        echo "Đang xử lý thư mục: $folder"
 
-        # Xóa tất cả các file .out đã được compiled trước đó
+        # Delete all .out files generated previously
         find "$folder" -type f -name "*.out" -exec rm -f {} \;
 
-        # Tìm file .cpp trong thư mục
+        # Delete all .bc files generated previously
         cpp_file=$(find "$folder" -type f -name "*.cpp")
 
-        # Kiểm tra nếu file .cpp tồn tại
+        # Check if the cpp file exists
         if [ -n "$cpp_file" ]; then
-            # Tên file .out sẽ được lưu
-            output_file="$folder/$(basename "$folder").out"
+            # Name of the output file
+            output_file="$folder/$(basename "$cpp_file" .cpp).out"
 
-            # Compile file .cpp và lưu kết quả vào file .out
+            # Compile file .cpp and redirect output to .out file
             g++ "$cpp_file" -o "$folder/a.out" &> "$output_file"
 
-            # Kiểm tra nếu compile thành công
-            # Nếu compile thành công, trong file .out sẽ không có gì
-            # Nếu compile không thành công, trong file .out sẽ chứa thông tin lỗi báo từ compiler
+            # Delete the compiled executable file
+            rm -f "$folder/a.out"
+
+            # Check if the compilation was successful
+            # If successful, the .out file not contain any error messages
+            # If the compilation fails, the .out file will contain error messages from the compiler
             if [ $? -eq 0 ]; then
-                echo "$cpp_file pass \n"
+                echo "$cpp_file pass"
             else
-                echo "$cpp_file fail \n"
+                echo "$cpp_file fail"
             fi
 
             echo "-----------------------"
         else
-            echo "Không tìm thấy file .cpp trong thư mục: $folder \n"
+            echo "No .cpp file found in $folder"
         fi
     fi
 done

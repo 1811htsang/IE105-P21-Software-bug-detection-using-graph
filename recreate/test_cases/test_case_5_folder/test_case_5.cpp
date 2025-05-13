@@ -1,11 +1,6 @@
 #include <bits/stdc++.h>
 #define ll long long
 const int md = 1000000007;
-#define fast                                                                   \\
-  ios_base::sync_with_stdio(false);                                            \\
-  cin.tie(0);                                                                  \\
-  cout.tie(0);
-/* VECTORS */
 #define pb push_back
 #define g(v, i, j) get<i>(v[j])
 #define co(v, x) count(v.begin(), v.end(), x)
@@ -128,9 +123,8 @@ bool isprime(int p) {
   return true;
 }
 int main() {
-  fast;
-  int n;
-  cin >> n;
+
+  int n = 1000;
   int cnt = 0, i = 1;
   while (i < n) {
     int j = 1;

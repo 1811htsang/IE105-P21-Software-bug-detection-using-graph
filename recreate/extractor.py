@@ -2,41 +2,42 @@ import json
 import os
 import random
 
-# Đường dẫn đến file JSONL
+# Path to the JSONL file
 jsonl_file_path = "/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/cpp_dataset.jsonl"
 
-# Đường dẫn thư mục gốc để lưu các thư mục test_case
+# Base directory to save the test cases
 output_base_dir = "/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases"
 
-# Tạo thư mục gốc nếu chưa tồn tại
+# Create the base directory if it doesn't exist
 os.makedirs(output_base_dir, exist_ok=True)
 
-# Đọc toàn bộ file JSONL và lưu các dòng vào danh sách
+# Read the JSONL file and filter out empty lines
 with open(jsonl_file_path, "r", encoding="utf-8") as jsonl_file:
     lines = [line.strip() for line in jsonl_file if line.strip()]
 
-# Chọn ngẫu nhiên 30 dòng từ file JSONL
-random_lines = random.sample(lines, min(30, len(lines)))
+# Randomly select up to 30 lines from the JSONL file
+random_lines = random.sample(lines, min(10, len(lines)))
 
-# Xử lý từng dòng JSON
+# Iterate through the selected lines and extract the "pass" key
+# and save it to a C++ file
 for idx, line in enumerate(random_lines, start=1):
     try:
-        # Parse dòng JSON
+        # Parse the JSON line
         data = json.loads(line)
 
-        # Kiểm tra key "pass"
+        # Check for the "pass" key
         if "pass" in data:
-            # Tạo thư mục riêng cho từng test case
+            # Create a separate folder for each test case
             folder_name = f"test_case_{idx}_folder"
             folder_path = os.path.join(output_base_dir, folder_name)
             os.makedirs(folder_path, exist_ok=True)
 
-            # Tạo file C++ trong thư mục
+            # Create a C++ file in the folder
             cpp_file_path = os.path.join(folder_path, f"test_case_{idx}.cpp")
             with open(cpp_file_path, "w", encoding="utf-8") as cpp_file:
                 cpp_file.write(data["pass"])
 
-            print(f"Source code đã được lưu vào: {cpp_file_path}")
+            print(f"Source code saved to: {cpp_file_path}")
 
     except json.JSONDecodeError:
-        print(f"Lỗi khi parse JSON ở dòng {idx}: {line}")
+        print(f"Error parsing JSON at line {idx}: {line}")

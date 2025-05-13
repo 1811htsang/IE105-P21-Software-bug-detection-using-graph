@@ -43,7 +43,7 @@ public:
 
 #define DEBUG true
 
-#define IPC_LEVELS 1 // default levels of inter-procedural analysis (1 turns it off completely)
+int IPC_LEVELS = 1; // default levels of inter-procedural analysis (1 turns it off completely)
 
 // GLOBAL DEFINITIONS
 unsigned int T_SUPPORT = 5;		 // default support
@@ -398,6 +398,36 @@ void inputCallgraph(vector<string> &callgraph_tokens)
 
 int main(int argc, char *argv[])
 {
+    // Kiểm tra số lượng tham số
+    if (argc != 4)
+    {
+        cerr << "Usage: " << argv[0] << " <IPC_LEVELS> <T_SUPPORT> <T_CONFIDENCE>" << endl;
+        return 1;
+    }
+
+    // Gán giá trị từ tham số dòng lệnh
+    try
+    {
+        IPC_LEVELS = stoi(argv[1]);       // Tham số đầu tiên: IPC_LEVELS
+        T_SUPPORT = stoi(argv[2]);       // Tham số thứ hai: T_SUPPORT
+        T_CONFIDENCE = stoi(argv[3]);    // Tham số thứ ba: T_CONFIDENCE
+    }
+    catch (const invalid_argument &e)
+    {
+        cerr << "Error: All arguments must be integers." << endl;
+        return 1;
+    }
+    catch (const out_of_range &e)
+    {
+        cerr << "Error: Argument value out of range." << endl;
+        return 1;
+    }
+
+    // In ra các giá trị đã nhận để kiểm tra
+    cout << "IPC_LEVELS: " << IPC_LEVELS << endl;
+    cout << "T_SUPPORT: " << T_SUPPORT << endl;
+    cout << "T_CONFIDENCE: " << T_CONFIDENCE << endl;
+
     inputCallgraph(callgraph_tokens); // read the callgraph from standard input
     parser();                         // parse the callgraph
 
