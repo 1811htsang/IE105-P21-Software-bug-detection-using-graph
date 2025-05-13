@@ -1,3 +1,13 @@
+/*
+	Procedure of the program:
+	1. Read the callgraph from standard input
+	2. Parse the callgraph to extract function names and their IDs
+	3. Transform the callgraph for inter-procedural analysis
+	4. Analyze the callgraph to calculate support and confidence for function pairs
+	5. Find bugs in the callgraph by checking for missing function pairs
+	6. Print the results to standard output
+*/
+
 #include <iostream>
 #include <unistd.h>
 #include <algorithm>
@@ -12,10 +22,10 @@ using namespace std;
 class FunctionPair
 {
 public:
-    int a;
-    int b;
-    int support;
-    float confidence;
+    int a; // represents the first function in the pair
+    int b; // represents the second function in the pair
+    int support; // represents the number of times the pair occurs together
+    float confidence; // represents the confidence level of the pair
 
     FunctionPair() : a(0), b(0), support(0), confidence(-1) {}
 
@@ -36,8 +46,8 @@ public:
 #define IPC_LEVELS 1 // default levels of inter-procedural analysis (1 turns it off completely)
 
 // GLOBAL DEFINITIONS
-unsigned int T_SUPPORT = 2;		 // default support
-unsigned int T_CONFIDENCE = 50;	 // default confidence
+unsigned int T_SUPPORT = 5;		 // default support
+unsigned int T_CONFIDENCE = 80;	 // default confidence
 vector<string> callgraph_tokens; // tokenize the callgraph
 map<int, string> IDtoFunc;
 map<string, int> FunctoID;
@@ -84,7 +94,7 @@ string getFuncFromToken(const string &token)
 //*
 void parser()
 {
-
+	// initialize some parameters
 	int ID = -1;
 	int i;
 	string func, TopLevelFunc = "";
@@ -99,16 +109,20 @@ void parser()
 		} //
 	} //
 
-	// Iterate through the callgraph tokens and retrive all the functions that are being called
-	// once retrived assign them a unique ID to avoid doing string comparison
+	// ID assignment to functions
+    // Iterate through the callgraph tokens and retrieve all the functions that are being called
+    // once retrieved assign them a unique ID to avoid doing string comparison
+    // split this to a function
 	for (; i < callgraph_tokens.size(); i++)
 	{
 
+		// Skip empty lines
 		if (callgraph_tokens[i] == "")
 		{
 			continue;
 		}
 
+		// check if the line contains a function call
 		if (callgraph_tokens[i].find("function:") != string::npos ||
 			callgraph_tokens[i].find("function") != string::npos)
 		{
@@ -119,25 +133,33 @@ void parser()
 				ID++;
 				FunctoID[func] = ID;
 				IDtoFunc[ID] = func;
-			} // if
-		} // if
+			} 
+		} 
 
+		// check if the line contains a function call
+        // if it does, assign the function name to TopLevelFunc
+        // else, assign the function name to func
+        // and add the function ID to the FuncCalls map
 		if (callgraph_tokens[i].find("function:") != string::npos)
 		{
 			TopLevelFunc = getFuncFromToken(callgraph_tokens[i]);
-		} // if
+		} 
 		else if (callgraph_tokens[i].find("function") != string::npos)
 		{
-
 			func = getFuncFromToken(callgraph_tokens[i]);
 
+			// check if the function ID is already in the FuncCalls map
+            // if it is, check if the function ID is already in the vector
+            // if it is not, add it to the vector
 			if (FuncCalls.find(FunctoID[TopLevelFunc]) != FuncCalls.end())
 			{
+				// check if the function ID is already in the vector
+                // if it is not, add it to the vector
+                // else, add it to the vector
 				if (find(FuncCalls[FunctoID[TopLevelFunc]].begin(),
 						 FuncCalls[FunctoID[TopLevelFunc]].end(),
 						 FunctoID[func]) == FuncCalls[FunctoID[TopLevelFunc]].end())
 				{
-
 					FuncCalls[FunctoID[TopLevelFunc]].push_back(FunctoID[func]);
 				} // if
 			} // if
@@ -157,11 +179,41 @@ void ipc_transform()
 	/*
 	Transforms the internal function call structure for interprocedural analysis
 	Let FuncCalls-K be the graph where each node has an edge to all
-	nodea that could be reached in K steps or less in the original FuncCalls graph
+	node that could be reached in K steps or less in the original FuncCalls graph
 	Formally, replaces the graph in FuncCalls with FuncCalls-IPC_LEVELS
 	At each step, the algorithm starts with OldFuncCalls = FuncCalls-i, and finds
 	FuncCalls i+i by finding all verticies reachable in i+1 steps.
 	*/
+
+	/*
+		Better explanation:
+		With K is the number of levels of inter-procedural analysis
+		FuncCalls-K is the graph where each node has an edge to all
+		node that could be reached in K steps or less in the original FuncCalls graph
+		Formally, replaces the graph in FuncCalls with FuncCalls-IPC_LEVELS
+		At each step, the algorithm starts with OldFuncCalls = FuncCalls-i, and finds
+		FuncCalls i+i by finding all verticies reachable in i+1 steps.
+		For example, if we have a function A that calls B and C, and B calls D,
+		then FuncCalls-1 would be:
+		A -> B
+		A -> C
+		B -> D
+		FuncCalls-2 would be:
+		A -> B
+		A -> C
+		A -> D
+		B -> D
+		FuncCalls-3 would be:
+		A -> B
+		A -> C
+		A -> D
+		B -> D
+		C -> D
+
+		Hints: with K = 1, we have the original graph so IPC is off
+	*/
+
+	// Initialize some parameters
 	int a, b;
 	map<int, vector<int>> NewFuncCalls = FuncCalls;
 	map<int, vector<int>> OldFuncCalls = FuncCalls;
@@ -176,7 +228,8 @@ void ipc_transform()
 		{
 			a = i->first;
 			vector<int> &v = i->second;
-			// Find all verticies reachable in i+1 steps, find all verticies reachable from this nodes immediate children
+			// Find all verticies reachable in i+1 steps, 
+			// find all verticies reachable from this nodes immediate children
 			// in the original graph in i steps.
 			for (int j = 0; j < v.size(); j++)
 			{
@@ -250,12 +303,14 @@ void analyze()
 void find_bugs()
 {
 
+	// initialize some parameters
 	bool found = false;
 	int a, b;
 	string pairname = "";
 
-	// Look through all top-level functions. OriginalFuncCalls is used because we only want to report each bug once,
-	//  in the function in which it was originally used.
+	// Look through all top-level functions. 
+	// OriginalFuncCalls is used because we only want to report each bug once,
+	// in the function in which it was originally used.
 	for (map<int, vector<int>>::iterator i = OriginalFuncCalls.begin(); i != OriginalFuncCalls.end(); ++i)
 	{
 		vector<int> &v = i->second;
@@ -276,24 +331,26 @@ void find_bugs()
 						found = true;
 						break;
 					}
-				} // for
+				}
+
+				// If we don't find a use of p.b, then we have a bug
 				if (!found)
 				{
 					// Admiral Ackbar says: "It's a bug!
 					if (IDtoFunc[p.a] < IDtoFunc[p.b])
 					{
-						pairname = IDtoFunc[p.a] + " " + IDtoFunc[p.b];
+						pairname = demangle(IDtoFunc[p.a]) + " " + demangle(IDtoFunc[p.b]);
 					}
 					else
 					{
-						pairname = IDtoFunc[p.b] + " " + IDtoFunc[p.a];
+						pairname = demangle(IDtoFunc[p.b]) + " " + demangle(IDtoFunc[p.a]);
 					}
-					cout << "bug: " << IDtoFunc[p.a] << " in " << IDtoFunc[i->first] << " pair: (" << pairname << ") ";
+					cout << "bug may appear: " << demangle(IDtoFunc[p.a]) << " in " << demangle(IDtoFunc[i->first]) << " pair: (" << pairname << ") ";
 					cout << "support: " << p.support << " confidence: " << fixed << setprecision(2) << p.confidence << "%" << endl;
 				}
-			} // for
-		} // for
-	} // for
+			}
+		} 
+	}
 }
 
 void printBitcode(vector<string> &callgraph_tokens)
@@ -317,7 +374,7 @@ void printFuntionMapping(map<int, string> &IDtoFunc)
 void printCallFunctions(map<int, vector<int>> &FuncCalls)
 {
     cout << endl
-         << "call functions with total reduction no edge weight :" << endl;
+         << "call functions:" << endl;
     for (map<int, vector<int>>::iterator it = FuncCalls.begin(); it != FuncCalls.end(); ++it)
     {
         cout << it->first << " calls: ";
@@ -327,6 +384,7 @@ void printCallFunctions(map<int, vector<int>> &FuncCalls)
         }
         cout << endl;
     }
+	cout << endl;
 }
 
 void inputCallgraph(vector<string> &callgraph_tokens)
@@ -377,7 +435,7 @@ int main(int argc, char *argv[])
 		for (map<int, FunctionPair>::iterator j = Pairs[i].begin(); j != Pairs[i].end(); ++j)
 		{
 			FunctionPair &p = j->second;
-			cout << "pair: (" << IDtoFunc[p.a] << " " << IDtoFunc[p.b] << "), support: "
+			cout << "pair: (" << demangle(IDtoFunc[p.a]) << " " << demangle(IDtoFunc[p.b]) << "), support: "
 				 << p.support << ", confidence: " << fixed << setprecision(2) << p.confidence << "%" << endl;
 		}
 	}

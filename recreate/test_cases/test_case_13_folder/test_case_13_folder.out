@@ -1,0 +1,11 @@
+/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases/test_case_13_folder/test_case_13.cpp: In function ‘void A()’:
+/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases/test_case_13_folder/test_case_13.cpp:70:11: warning: ignoring return value of ‘void* malloc(size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   70 |     malloc(0);
+      |     ~~~~~~^~~
+/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases/test_case_13_folder/test_case_13.cpp: In function ‘void B()’:
+/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases/test_case_13_folder/test_case_13.cpp:76:11: warning: ignoring return value of ‘void* malloc(size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   76 |     malloc(0);
+      |     ~~~~~~^~~
+/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases/test_case_13_folder/test_case_13.cpp:77:11: warning: ignoring return value of ‘void* malloc(size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   77 |     malloc(0);
+      |     ~~~~~~^~~

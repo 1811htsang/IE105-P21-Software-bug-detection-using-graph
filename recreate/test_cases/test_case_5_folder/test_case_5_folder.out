@@ -1,0 +1,18 @@
+/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases/test_case_5_folder/test_case_5.cpp:4:80: error: stray ‘\’ in program
+    4 | #define fast                                                                   \\
+    5 |   ios_base::sync_with_stdio(false);                                            \\
+/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases/test_case_5_folder/test_case_5.cpp:131:3: note: in expansion of macro ‘fast’
+  131 |   fast;
+      |   ^~~~
+/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases/test_case_5_folder/test_case_5.cpp:5:80: error: stray ‘\’ in program
+    5 |   ios_base::sync_with_stdio(false);                                            \\
+    6 |   cin.tie(0);                                                                  \\
+/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases/test_case_5_folder/test_case_5.cpp:131:3: note: in expansion of macro ‘fast’
+  131 |   fast;
+      |   ^~~~
+/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases/test_case_5_folder/test_case_5.cpp:6:80: error: stray ‘\’ in program
+    6 |   cin.tie(0);                                                                  \\
+    7 |   cout.tie(0);
+/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases/test_case_5_folder/test_case_5.cpp:131:3: note: in expansion of macro ‘fast’
+  131 |   fast;
+      |   ^~~~
