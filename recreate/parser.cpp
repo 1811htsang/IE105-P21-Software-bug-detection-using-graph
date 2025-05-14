@@ -43,26 +43,37 @@ public:
 
 #define DEBUG true
 
-int IPC_LEVELS = 1; // default levels of inter-procedural analysis (1 turns it off completely)
+int IPC_LEVELS = 1; 
+// default levels of inter-procedural analysis (1 turns it off completely)
 
 // global variables
-unsigned int threshhold_support = 5;		 // default support
-unsigned int threshhold_confidence = 80;	 // default confidence
-vector<string> callgraph_tokens; // tokenize the callgraph
+unsigned int threshhold_support = 5;		 
+// default support
+unsigned int threshhold_confidence = 80;	 
+// default confidence
+vector<string> callgraph_tokens; 
+// tokenize the callgraph
 map<int, string> id_to_func;
+// map function ID to function name
 map<string, int> func_to_id;
-map<int, vector<int>> function_call;		 // Modified for inter-procedural analysis
-map<int, vector<int>> origin_function_call; // The original function call data structure, corresponding to level 1 inter-procedural analysis
+// map function name to function ID
+map<int, vector<int>> function_call;
+// Modified for inter-procedural analysis
+map<int, vector<int>> origin_function_call; 
+// The original function call data structure, corresponding to level 1 inter-procedural analysis
 int maxID;
+// maximum function ID
 vector<map<int, FunctionPair>> Pairs;
+// vector of function pairs
 
 string demangle(const string &mangled_name)
 {
+	// Use c++filt to demangle the name 
     string command = "c++filt -t " + mangled_name;
     FILE *pipe = popen(command.c_str(), "r");
     if (!pipe)
     {
-        return mangled_name; // Trả lại tên gốc nếu popen thất bại
+        return mangled_name;
     }
     char buffer[128];
     string result = "";
@@ -74,7 +85,6 @@ string demangle(const string &mangled_name)
         }
     }
     pclose(pipe);
-    // Loại bỏ newline nếu có
     if (!result.empty() && result.back() == '\n')
     {
         result.pop_back();
@@ -334,7 +344,6 @@ void find_bugs()
 				// If we don't find a use of p.b, then we have a bug
 				if (!found)
 				{
-					// Admiral Ackbar says: "It's a bug!
 					if (id_to_func[p.a] < id_to_func[p.b])
 					{
 						pairname = demangle(id_to_func[p.a]) + " " + demangle(id_to_func[p.b]);

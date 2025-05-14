@@ -14,6 +14,7 @@ opt -passes=print-callgraph filename.bc
 
 ---
 
+(this thing is not sure to extract execution trace from compiled file, but maybe still useful)
 - To extract execution trace from compiled file, use `perf` below:
 ```bash
 perf record ./filename
