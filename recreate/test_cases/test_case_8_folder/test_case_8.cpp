@@ -1,41 +1,78 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <cmath>
+
 using namespace std;
 
-int main() {
-  int N, ans = 0;
-  cin >> N;
+// Khai báo các hàm
+int A();
+int B();
+int C();
+int D();
 
-  int A = 1, B = 1, C = 1;
+void scope1();
+void scope2();
+void scope3();
+void scope4();
 
-  int sum = 0;
-  // Aの操作
-  while (sum <= N / 2) {
-    if (A * B > N) {
-      break;
-    }
-    // Bの操作
-    while (sum <= N / 2) {
-      if (A * B > N) {
-        break;
-      }
-      // Cの操作
-      while (sum <= N) {
-        // 計算
-        sum = A * B + C;
-        // Nと一致したら
-        if (sum == N) {
-          ans++;
+bool isprime(int p) {
+    int i = 2;
+    while (i <= sqrt(p)) {
+        if (p % i == 0) {
+            return false;
         }
-        sum = 0;
-        C++;
-      }
-      C = 1;
-      B++;
+        i++;
     }
-    B = 1;
-    C = 1;
-    A++;
-  }
+    return true;
+}
 
-  cout << ans << endl;
+int main() {
+    // Gọi các phạm vi thử nghiệm
+    scope1();
+    scope2();
+    scope3();
+    scope4();
+    return 0;
+}
+
+// Định nghĩa các hàm
+int A() {
+    return 2 + 2;
+}
+
+int C() {
+    int x = 0;
+    cout << isprime(x) << endl; // In ra kết quả kiểm tra số nguyên tố
+    return x;
+}
+
+int D() {
+    return 1;
+}
+
+// Định nghĩa các phạm vi
+void scope1() {
+    cout << "Scope 1: ";
+}
+
+void scope2() {
+    cout << "Scope 2: " << C() << ", " << D() << endl;
+    cout << "Scope 2: " << B() << endl;
+    scope1();
+}
+
+void scope3() {
+    cout << "Scope 3: " << B() << endl;
+    cout << "Scope 3: " << B() << ", " << C() * D() << endl;
+    scope1();
+    scope2();
+}
+
+void scope4() {
+    cout << "Scope 4: " << A() << ", " << B() << endl;
+    cout << "Scope 4: " << A() * B() << ", " << C() * D() << endl;
+    scope1();
+    scope2();
+    scope3();
 }

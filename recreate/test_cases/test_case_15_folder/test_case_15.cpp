@@ -26,18 +26,11 @@ int main() {
 
 // Định nghĩa các hàm
 int A() {
-    int x = rand() % 10; // Sinh số ngẫu nhiên từ 0 đến 9
-    return x + 1;
+    return -1;
 }
 
 int B() {
-    int x = rand() % 10;
-    return x - 1;
-}
-
-int C() {
-    int x = rand() % 10;
-    return x * 2;
+    return 0;
 }
 
 int D() {
@@ -51,6 +44,7 @@ void scope1() {
 }
 
 void scope2() {
+    scope1();
     cout << "Scope 2: " << C() << ", " << D() << endl;
 }
 
@@ -59,10 +53,7 @@ void scope3() {
 }
 
 void scope4() {
-    vector<int> results = {A(), B(), C(), D()};
-    cout << "Scope 4: ";
-    for (int r : results) {
-        cout << r << " ";
-    }
+    scope1();
+    scope2();
     cout << endl;
 }

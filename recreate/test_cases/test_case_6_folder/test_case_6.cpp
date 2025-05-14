@@ -1,57 +1,94 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include "stdio.h"
+#include <stdlib.h>
 
-#define pb push_back
-#define mp make_pair
-#define ff first
-#define ss second
-#define ll long long int
-#define ull unsigned long long int
-#define ld long double
+void scope1();
+void scope2();
+void scope3();
+void scope4();
+void scope5();
+void scope6();
 
-int n;
-vector<vector<int>> arr(n + 1);
-vector<bool> vis(n + 1);
-int cnt;
+void A();
+void B();
+void C();
+void D();
 
-void dfs(int v) {
-  vis[v] = true;
-  for (int i = 1; i < n + 1; i++) {
-    if (vis[i] == false && arr[v][i] == 1) {
-      dfs(i);
-    }
-  }
-}
+
 
 int main() {
-  ios_base::sync_with_stdio(0);
-  cin.tie(0);
-  cout.tie(0);
-
-#ifndef ONLINE_JUDGE
-  freopen("input.txt", "r", stdin);
-  freopen("output.txt", "w", stdout);
-#endif
-
-  int m, a, b;
-  cin >> n >> m;
-  for (int i = 1; i < n + 1; i++) {
-    vector<int> ar(n + 1, 0);
-    arr.pb(ar);
-    vis[i] = false;
-  }
-  for (int i = 0; i < m; i++) {
-    cin >> a >> b;
-    arr[a][b] = 1;
-    arr[b][a] = 1;
-  }
-  cnt = 0;
-  for (int i = 1; i < n + 1; i++) {
-    if (!vis[i]) {
-      cnt += 1;
-      dfs(i);
-    }
-  }
-  cout << cnt - 1;
+  scope1();
+  scope2();
+  scope3();
+  scope4();
+  
   return 0;
+}
+
+void scope1() {
+  A();
+}
+
+void scope2() {
+  A();
+  C();
+  D();
+}
+
+void scope3() {
+  A();
+  scope2();
+}
+
+void scope4() {
+  B();
+  C();
+  D();
+  scope1();
+  scope2();
+  scope3();
+}
+
+void scope5() {
+  B();
+  C();
+  A();
+  scope1();
+  scope3();
+}
+
+void scope6() {
+  B();
+  D();
+  scope3();
+}
+
+void A() {
+  int *p = new int[10];
+  int q = 0;
+  for (int i = 0; i < 10; i++) {
+    p[i] = i;
+  }
+  printf("A\n");
+  delete[] p;
+  p = nullptr;
+}
+
+void B() {
+  int *q = new int[10];
+  printf("B\n");
+  A();
+}
+
+void C() {
+  printf("C\n");
+  int *p = new int;
+  *p = 0;
+  delete p;
+  A();
+}
+
+void D() {
+  A();
+  B();
+  printf("D\n");
 }

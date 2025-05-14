@@ -28,8 +28,8 @@ for folder in "$base_dir"/test_case_*_folder;
 do
     # Check if the directory exists
     if [ -d "$folder" ]; then
-        echo "----------------------"
-        echo "Đang xử lý thư mục: $folder"
+        folder_name=$(basename "$folder")
+        echo "In processing folder: $folder_name"
 
         # Delete all .out files generated previously
         find "$folder" -type f -name "generated_callgraph.out" -exec rm -f {} \;
@@ -37,7 +37,8 @@ do
         # Delete all .bc files generated previously
         find "$folder" -type f -name "*.bc" -exec rm -f {} \;
 
-        echo "-----------------------"
+        # Delete all .log files generated previously
+        find "$folder" -type f -name "*.log" -exec rm -f {} \;
     fi
 done
 echo "All test cases cleaned up."
