@@ -45,14 +45,14 @@ public:
 
 int IPC_LEVELS = 1; // default levels of inter-procedural analysis (1 turns it off completely)
 
-// GLOBAL DEFINITIONS
-unsigned int T_SUPPORT = 5;		 // default support
-unsigned int T_CONFIDENCE = 80;	 // default confidence
+// global variables
+unsigned int threshhold_support = 5;		 // default support
+unsigned int threshhold_confidence = 80;	 // default confidence
 vector<string> callgraph_tokens; // tokenize the callgraph
-map<int, string> IDtoFunc;
-map<string, int> FunctoID;
-map<int, vector<int>> FuncCalls;		 // Modified for inter-procedural analysis
-map<int, vector<int>> OriginalFuncCalls; // The original function call data structure, corresponding to level 1 inter-procedural analysis
+map<int, string> id_to_func;
+map<string, int> func_to_id;
+map<int, vector<int>> function_call;		 // Modified for inter-procedural analysis
+map<int, vector<int>> origin_function_call; // The original function call data structure, corresponding to level 1 inter-procedural analysis
 int maxID;
 vector<map<int, FunctionPair>> Pairs;
 
@@ -91,7 +91,6 @@ string getFuncFromToken(const string &token)
 	return token.substr(first, last - first);
 } // getFuncFromToken
 
-//*
 void parser()
 {
 	// initialize some parameters
@@ -128,18 +127,18 @@ void parser()
 		{
 
 			func = getFuncFromToken(callgraph_tokens[i]);
-			if (FunctoID.find(func) == FunctoID.end())
+			if (func_to_id.find(func) == func_to_id.end())
 			{
 				ID++;
-				FunctoID[func] = ID;
-				IDtoFunc[ID] = func;
+				func_to_id[func] = ID;
+				id_to_func[ID] = func;
 			} 
 		} 
 
 		// check if the line contains a function call
         // if it does, assign the function name to TopLevelFunc
         // else, assign the function name to func
-        // and add the function ID to the FuncCalls map
+        // and add the function ID to the function_call map
 		if (callgraph_tokens[i].find("function:") != string::npos)
 		{
 			TopLevelFunc = getFuncFromToken(callgraph_tokens[i]);
@@ -148,62 +147,61 @@ void parser()
 		{
 			func = getFuncFromToken(callgraph_tokens[i]);
 
-			// check if the function ID is already in the FuncCalls map
+			// check if the function ID is already in the function_call map
             // if it is, check if the function ID is already in the vector
             // if it is not, add it to the vector
-			if (FuncCalls.find(FunctoID[TopLevelFunc]) != FuncCalls.end())
+			if (function_call.find(func_to_id[TopLevelFunc]) != function_call.end())
 			{
 				// check if the function ID is already in the vector
                 // if it is not, add it to the vector
                 // else, add it to the vector
-				if (find(FuncCalls[FunctoID[TopLevelFunc]].begin(),
-						 FuncCalls[FunctoID[TopLevelFunc]].end(),
-						 FunctoID[func]) == FuncCalls[FunctoID[TopLevelFunc]].end())
+				if (find(function_call[func_to_id[TopLevelFunc]].begin(),
+						 function_call[func_to_id[TopLevelFunc]].end(),
+						 func_to_id[func]) == function_call[func_to_id[TopLevelFunc]].end())
 				{
-					FuncCalls[FunctoID[TopLevelFunc]].push_back(FunctoID[func]);
-				} // if
-			} // if
+					function_call[func_to_id[TopLevelFunc]].push_back(func_to_id[func]);
+				}
+			}
 			else
 			{
-				FuncCalls[FunctoID[TopLevelFunc]].push_back(FunctoID[func]);
-			} // else
-		} // else
+				function_call[func_to_id[TopLevelFunc]].push_back(func_to_id[func]);
+			}
+		}
 
-	} // for
+	}
 	maxID = ID;
-} // parser
-//*/
+}
 
 void ipc_transform()
 {
 	/*
 	Transforms the internal function call structure for interprocedural analysis
-	Let FuncCalls-K be the graph where each node has an edge to all
-	node that could be reached in K steps or less in the original FuncCalls graph
-	Formally, replaces the graph in FuncCalls with FuncCalls-IPC_LEVELS
-	At each step, the algorithm starts with OldFuncCalls = FuncCalls-i, and finds
-	FuncCalls i+i by finding all verticies reachable in i+1 steps.
+	Let function_call-K be the graph where each node has an edge to all
+	node that could be reached in K steps or less in the original function_call graph
+	Formally, replaces the graph in function_call with function_call-IPC_LEVELS
+	At each step, the algorithm starts with Oldfunction_call = function_call-i, and finds
+	function_call i+i by finding all verticies reachable in i+1 steps.
 	*/
 
 	/*
 		Better explanation:
 		With K is the number of levels of inter-procedural analysis
-		FuncCalls-K is the graph where each node has an edge to all
-		node that could be reached in K steps or less in the original FuncCalls graph
-		Formally, replaces the graph in FuncCalls with FuncCalls-IPC_LEVELS
-		At each step, the algorithm starts with OldFuncCalls = FuncCalls-i, and finds
-		FuncCalls i+i by finding all verticies reachable in i+1 steps.
+		function_call-K is the graph where each node has an edge to all
+		node that could be reached in K steps or less in the original function_call graph
+		Formally, replaces the graph in function_call with function_call-IPC_LEVELS
+		At each step, the algorithm starts with Oldfunction_call = function_call-i, and finds
+		function_call i+i by finding all verticies reachable in i+1 steps.
 		For example, if we have a function A that calls B and C, and B calls D,
-		then FuncCalls-1 would be:
+		then function_call-1 would be:
 		A -> B
 		A -> C
 		B -> D
-		FuncCalls-2 would be:
+		function_call-2 would be:
 		A -> B
 		A -> C
 		A -> D
 		B -> D
-		FuncCalls-3 would be:
+		function_call-3 would be:
 		A -> B
 		A -> C
 		A -> D
@@ -215,16 +213,16 @@ void ipc_transform()
 
 	// Initialize some parameters
 	int a, b;
-	map<int, vector<int>> NewFuncCalls = FuncCalls;
-	map<int, vector<int>> OldFuncCalls = FuncCalls;
-	OriginalFuncCalls = FuncCalls;
+	map<int, vector<int>> Newfunction_call = function_call;
+	map<int, vector<int>> Oldfunction_call = function_call;
+	origin_function_call = function_call;
 
 	// Repeatedly find
 	for (int i = 1; i < IPC_LEVELS; i++)
 	{
-		OldFuncCalls = NewFuncCalls;
+		Oldfunction_call = Newfunction_call;
 		// Loop through all verticies in the graph
-		for (map<int, vector<int>>::iterator i = FuncCalls.begin(); i != FuncCalls.end(); ++i)
+		for (map<int, vector<int>>::iterator i = function_call.begin(); i != function_call.end(); ++i)
 		{
 			a = i->first;
 			vector<int> &v = i->second;
@@ -238,15 +236,15 @@ void ipc_transform()
 				cout << a << "," << b << endl;
 #endif
 				// Merge verticies into the vector
-				NewFuncCalls[a].reserve(NewFuncCalls[a].size() + OldFuncCalls[b].size());
-				NewFuncCalls[a].insert(NewFuncCalls[a].end(), OldFuncCalls[b].begin(), OldFuncCalls[b].end());
+				Newfunction_call[a].reserve(Newfunction_call[a].size() + Oldfunction_call[b].size());
+				Newfunction_call[a].insert(Newfunction_call[a].end(), Oldfunction_call[b].begin(), Oldfunction_call[b].end());
 			}
 			// Sort and remove duplicates
-			sort(NewFuncCalls[a].begin(), NewFuncCalls[a].end());
-			NewFuncCalls[a].erase(unique(NewFuncCalls[a].begin(), NewFuncCalls[a].end()), NewFuncCalls[a].end());
+			sort(Newfunction_call[a].begin(), Newfunction_call[a].end());
+			Newfunction_call[a].erase(unique(Newfunction_call[a].begin(), Newfunction_call[a].end()), Newfunction_call[a].end());
 		}
 	}
-	FuncCalls = NewFuncCalls;
+	function_call = Newfunction_call;
 }
 
 // Using the parse data, calculate the support for functions and function pairs,
@@ -258,7 +256,7 @@ void analyze()
 	int a = 0, b = 0;
 
 	// Calculate support for each function and function pair
-	for (map<int, vector<int>>::iterator i = FuncCalls.begin(); i != FuncCalls.end(); ++i)
+	for (map<int, vector<int>>::iterator i = function_call.begin(); i != function_call.end(); ++i)
 	{
 
 		vector<int> &v = i->second;
@@ -291,7 +289,7 @@ void analyze()
 			temp = j;
 			++j;
 			p.confidence = (float(p.support) * 100.0f) / float(support[p.a]);
-			if (p.support < T_SUPPORT || p.confidence < float(T_CONFIDENCE))
+			if (p.support < threshhold_support || p.confidence < float(threshhold_confidence))
 			{
 				// Doesn't meet support or confidence threasholds
 				Pairs[i].erase(temp);
@@ -309,9 +307,9 @@ void find_bugs()
 	string pairname = "";
 
 	// Look through all top-level functions. 
-	// OriginalFuncCalls is used because we only want to report each bug once,
+	// origin_function_call is used because we only want to report each bug once,
 	// in the function in which it was originally used.
-	for (map<int, vector<int>>::iterator i = OriginalFuncCalls.begin(); i != OriginalFuncCalls.end(); ++i)
+	for (map<int, vector<int>>::iterator i = origin_function_call.begin(); i != origin_function_call.end(); ++i)
 	{
 		vector<int> &v = i->second;
 		for (int q = 0; q < v.size(); q++)
@@ -323,9 +321,9 @@ void find_bugs()
 				found = false;
 				FunctionPair &p = j->second;
 				// See if we find a use of p.b
-				for (int k = 0; k < FuncCalls[i->first].size(); k++)
+				for (int k = 0; k < function_call[i->first].size(); k++)
 				{
-					b = FuncCalls[i->first][k];
+					b = function_call[i->first][k];
 					if (p.b == b)
 					{
 						found = true;
@@ -337,15 +335,15 @@ void find_bugs()
 				if (!found)
 				{
 					// Admiral Ackbar says: "It's a bug!
-					if (IDtoFunc[p.a] < IDtoFunc[p.b])
+					if (id_to_func[p.a] < id_to_func[p.b])
 					{
-						pairname = demangle(IDtoFunc[p.a]) + " " + demangle(IDtoFunc[p.b]);
+						pairname = demangle(id_to_func[p.a]) + " " + demangle(id_to_func[p.b]);
 					}
 					else
 					{
-						pairname = demangle(IDtoFunc[p.b]) + " " + demangle(IDtoFunc[p.a]);
+						pairname = demangle(id_to_func[p.b]) + " " + demangle(id_to_func[p.a]);
 					}
-					cout << "bug may appear: " << demangle(IDtoFunc[p.a]) << " in " << demangle(IDtoFunc[i->first]) << " pair: (" << pairname << ") ";
+					cout << "bug may appear: " << demangle(id_to_func[p.a]) << " in " << demangle(id_to_func[i->first]) << " pair: (" << pairname << ") ";
 					cout << "support: " << p.support << " confidence: " << fixed << setprecision(2) << p.confidence << "%" << endl;
 				}
 			}
@@ -362,20 +360,20 @@ void printBitcode(vector<string> &callgraph_tokens)
     }
 }
 
-void printFuntionMapping(map<int, string> &IDtoFunc)
+void printFuntionMapping(map<int, string> &id_to_func)
 {
     cout << "function map :" << endl;
-    for (map<int, string>::iterator it = IDtoFunc.begin(); it != IDtoFunc.end(); ++it)
+    for (map<int, string>::iterator it = id_to_func.begin(); it != id_to_func.end(); ++it)
     {
         cout << it->first << " -> " << it->second << " == " << demangle(it->second) << '\n';
     }
 }
 
-void printCallFunctions(map<int, vector<int>> &FuncCalls)
+void printCallFunctions(map<int, vector<int>> &function_call)
 {
     cout << endl
          << "call functions:" << endl;
-    for (map<int, vector<int>>::iterator it = FuncCalls.begin(); it != FuncCalls.end(); ++it)
+    for (map<int, vector<int>>::iterator it = function_call.begin(); it != function_call.end(); ++it)
     {
         cout << it->first << " calls: ";
         for (int it2 = 0; it2 < it->second.size(); it2++)
@@ -401,7 +399,7 @@ int main(int argc, char *argv[])
     // Kiểm tra số lượng tham số
     if (argc != 4)
     {
-        cerr << "Usage: " << argv[0] << " <IPC_LEVELS> <T_SUPPORT> <T_CONFIDENCE>" << endl;
+        cerr << "Usage: " << argv[0] << " <IPC_LEVELS> <threshhold_support> <threshhold_confidence>" << endl;
         return 1;
     }
 
@@ -409,8 +407,8 @@ int main(int argc, char *argv[])
     try
     {
         IPC_LEVELS = stoi(argv[1]);       // Tham số đầu tiên: IPC_LEVELS
-        T_SUPPORT = stoi(argv[2]);       // Tham số thứ hai: T_SUPPORT
-        T_CONFIDENCE = stoi(argv[3]);    // Tham số thứ ba: T_CONFIDENCE
+        threshhold_support = stoi(argv[2]);       // Tham số thứ hai: threshhold_support
+        threshhold_confidence = stoi(argv[3]);    // Tham số thứ ba: threshhold_confidence
     }
     catch (const invalid_argument &e)
     {
@@ -425,16 +423,16 @@ int main(int argc, char *argv[])
 
     // In ra các giá trị đã nhận để kiểm tra
     cout << "IPC_LEVELS: " << IPC_LEVELS << endl;
-    cout << "T_SUPPORT: " << T_SUPPORT << endl;
-    cout << "T_CONFIDENCE: " << T_CONFIDENCE << endl;
+    cout << "threshhold_support: " << threshhold_support << endl;
+    cout << "threshhold_confidence: " << threshhold_confidence << endl;
 
     inputCallgraph(callgraph_tokens); // read the callgraph from standard input
     parser();                         // parse the callgraph
 
 #if DEBUG
     printBitcode(callgraph_tokens); // To see the original Bitcode
-    printFuntionMapping(IDtoFunc);  // To see what we have in those data structure.
-    printCallFunctions(FuncCalls);  // To see the call functions with total reduction no edge weight
+    printFuntionMapping(id_to_func);  // To see what we have in those data structure.
+    printCallFunctions(function_call);  // To see the call functions with total reduction no edge weight
 #endif
 
     ipc_transform();                 // transform the callgraph for inter-procedural analysis
@@ -444,7 +442,7 @@ int main(int argc, char *argv[])
 
 	cout << endl
 		 << "IPC Call functions :" << endl;
-	for (map<int, vector<int>>::iterator it = FuncCalls.begin(); it != FuncCalls.end(); ++it)
+	for (map<int, vector<int>>::iterator it = function_call.begin(); it != function_call.end(); ++it)
 	{
 		cout << it->first << " calls: ";
 		for (int it2 = 0; it2 < it->second.size(); it2++)
@@ -465,7 +463,7 @@ int main(int argc, char *argv[])
 		for (map<int, FunctionPair>::iterator j = Pairs[i].begin(); j != Pairs[i].end(); ++j)
 		{
 			FunctionPair &p = j->second;
-			cout << "pair: (" << demangle(IDtoFunc[p.a]) << " " << demangle(IDtoFunc[p.b]) << "), support: "
+			cout << "pair: (" << demangle(id_to_func[p.a]) << " " << demangle(id_to_func[p.b]) << "), support: "
 				 << p.support << ", confidence: " << fixed << setprecision(2) << p.confidence << "%" << endl;
 		}
 	}

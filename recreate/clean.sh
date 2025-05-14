@@ -41,4 +41,8 @@ do
         find "$folder" -type f -name "*.log" -exec rm -f {} \;
     fi
 done
+
+# Delete the results images in the result folder
+rm -f results/*.png
+
 echo "All test cases cleaned up."

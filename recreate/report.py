@@ -135,6 +135,12 @@ def package_workflow_selected():
         
         # Read the output files and extract the number of bugs
         bugs_count = read_output_files()
+
+        # If all test cases have 0 bugs, stop further iterations
+        # Check if all counts are zero
+        if all(count == 0 for count in bugs_count):
+            print(f"All test cases have 0 bugs in iteration {iteration}. Stopping further iterations.")
+            break
         
         # Store the bugs count for this iteration
         iterations_bugs_count[f"Iteration {iteration}"] = bugs_count
@@ -143,7 +149,7 @@ def package_workflow_selected():
         param1 += 1
 
     # Plot the results as a line chart
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(50, 6))
     for iteration, bugs_count in iterations_bugs_count.items():
         plt.plot(range(len(bugs_count)), bugs_count, marker='o', label=iteration)
 
@@ -154,6 +160,16 @@ def package_workflow_selected():
     plt.xticks(range(len(bugs_count)), os.listdir(test_cases_dir), rotation=90)
     plt.legend()
     plt.tight_layout()
+
+    # Edit the legend to be outside the chart
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+    plt.subplots_adjust(right=0.85)
+
+    # Add iteration names to the line chart
+    for i, (iteration, bugs_count) in enumerate(iterations_bugs_count.items()):
+        plt.text(i, max(bugs_count) + 0.5, iteration, ha='center', va='bottom')
+        # Add a small offset to the y-coordinate for better visibility
+        plt.annotate(iteration, xy=(i, max(bugs_count)), xytext=(0, 5), textcoords='offset points', ha='center', va='bottom')
 
     # Save the chart to the results directory
     chart_path = os.path.join(results_dir, "bugs_count_iterations_chart.png")

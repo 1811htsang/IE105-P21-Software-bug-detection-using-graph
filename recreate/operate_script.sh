@@ -20,9 +20,9 @@ for folder in "$test_case_dir"/test_case_*_folder;
 do
     # Check if the directory exists
     if [ -d "$folder" ]; then
-        # Shorten the folder name for better readability
-        folder_name=$(basename "$folder")
-        echo "In processing folder: $folder_name"
+        # # Shorten the folder name for better readability
+        # folder_name=$(basename "$folder")
+        # echo "In processing folder: $folder_name"
 
         # Delete all .out files generated previously
         find "$folder" -type f -name "*.out" -exec rm -f {} \;
@@ -41,9 +41,9 @@ for folder in "$test_case_dir"/test_case_*_folder;
 do
     # Check if the directory exists
     if [ -d "$folder" ]; then
-        # Shorten the folder name for better readability
-        folder_name=$(basename "$folder")
-        echo "In processing folder: $folder_name"
+        # # Shorten the folder name for better readability
+        # folder_name=$(basename "$folder")
+        # echo "In processing folder: $folder_name"
 
         # Find the .cpp file in the current test_case_x_folder directory
         cpp_file=$(find "$folder" -type f -name "*.cpp")
