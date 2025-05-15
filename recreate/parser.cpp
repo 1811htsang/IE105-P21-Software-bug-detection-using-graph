@@ -41,7 +41,7 @@ public:
     */
 };
 
-#define DEBUG true
+#define DEBUG false
 
 int IPC_LEVELS = 1; 
 // default levels of inter-procedural analysis (1 turns it off completely)
@@ -430,15 +430,15 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // In ra các giá trị đã nhận để kiểm tra
-    cout << "IPC_LEVELS: " << IPC_LEVELS << endl;
-    cout << "threshhold_support: " << threshhold_support << endl;
-    cout << "threshhold_confidence: " << threshhold_confidence << endl;
-
     inputCallgraph(callgraph_tokens); // read the callgraph from standard input
     parser();                         // parse the callgraph
 
 #if DEBUG
+
+	// In ra các giá trị đã nhận để kiểm tra
+    cout << "IPC_LEVELS: " << IPC_LEVELS << endl;
+    cout << "threshhold_support: " << threshhold_support << endl;
+    cout << "threshhold_confidence: " << threshhold_confidence << endl;
     printBitcode(callgraph_tokens); // To see the original Bitcode
     printFuntionMapping(id_to_func);  // To see what we have in those data structure.
     printCallFunctions(function_call);  // To see the call functions with total reduction no edge weight
