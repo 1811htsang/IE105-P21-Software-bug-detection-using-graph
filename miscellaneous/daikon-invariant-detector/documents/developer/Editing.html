@@ -1,0 +1,340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
+<head><link rel="icon" href="../daikon-favicon.png" type="image/png"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Editing (The Daikon Invariant Detector Developer Manual)</title>
+
+<meta name="description" content="Editing (The Daikon Invariant Detector Developer Manual)">
+<meta name="keywords" content="Editing (The Daikon Invariant Detector Developer Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html" rel="start" title="Top">
+<link href="General-Index.html" rel="index" title="General Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html" rel="up" title="Top">
+<link href="Distribution.html#Distribution" rel="next" title="Distribution">
+<link href="Testing.html#Adding-regression-tests" rel="prev" title="Adding regression tests">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<span id="Editing"></span><div class="header">
+<p>
+Next: <a href="Distribution.html#Distribution" accesskey="n" rel="next">Distribution</a>, Previous: <a href="Testing.html#Testing" accesskey="p" rel="prev">Testing</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Editing-Daikon-source-code"></span><h2 class="chapter">6 Editing Daikon source code</h2>
+
+<p>The Daikon source code follows
+the <a href="https://google.github.io/styleguide/javaguide.html">Google Java Style</a>
+and also
+<a href="http://homes.cs.washington.edu/~mernst/advice/coding-style.html">Michael Ernst&rsquo;s coding conventions</a>.
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#Eclipse-setup" accesskey="1">Eclipse setup</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Editing-daikon_002etexinfo" accesskey="2">Editing daikon.texinfo</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<span id="Eclipse-setup"></span><div class="header">
+<p>
+Next: <a href="#Editing-daikon_002etexinfo" accesskey="n" rel="next">Editing daikon.texinfo</a>, Up: <a href="#Editing" accesskey="u" rel="up">Editing</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Eclipse-setup-1"></span><h3 class="section">6.1 Eclipse setup</h3>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#Start-up-Eclipse" accesskey="1">Start up Eclipse</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Existing-projects" accesskey="2">Existing projects</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#External-tools" accesskey="3">External tools</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Eclipse-debugger" accesskey="4">Eclipse debugger</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Using-Git-with-Eclipse" accesskey="5">Using Git with Eclipse</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<span id="Start-up-Eclipse"></span><div class="header">
+<p>
+Next: <a href="#Existing-projects" accesskey="n" rel="next">Existing projects</a>, Up: <a href="#Eclipse-setup" accesskey="u" rel="up">Eclipse setup</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Start-up-Eclipse-1"></span><h4 class="subsection">6.1.1 Start up Eclipse</h4>
+
+<p>Just run the command <code>eclipse</code> at the command shell.
+</p>
+<p>There is one big catch:  take note of where you launch Eclipse and
+<b>always</b> launch Eclipse from the same location. For example, you might
+want to alias run-eclipse with <code>cd $HOME; eclipse</code>.
+For convenience, this is already done for you if you source the
+<samp>daikon-dev.bashrc</samp> startup script.
+There are ways around the launch location inconvenience, such as
+the -data switch, but the alias trick should be the simplest and least
+confusing workaround.
+</p>
+
+<p>It is strongly recommended that you make the following customizations to Eclipse:
+</p>
+<div class="example">
+<pre class="example">Window &gt;&gt; Preferences &gt;&gt; Workbench &gt;&gt; Refresh Workspace on Startup
+Window &gt;&gt; Preferences &gt;&gt; Java &gt;&gt; Compiler &gt;&gt; Problems &gt;&gt; Unused imports &gt;&gt; Ignore
+Window &gt;&gt; Preferences &gt;&gt; Java &gt;&gt; Compiler &gt;&gt; Style &gt;&gt; Non-static access &gt;&gt; &gt;&gt; Ignore
+</pre></div>
+
+
+<hr>
+<span id="Existing-projects"></span><div class="header">
+<p>
+Next: <a href="#External-tools" accesskey="n" rel="next">External tools</a>, Previous: <a href="#Start-up-Eclipse" accesskey="p" rel="prev">Start up Eclipse</a>, Up: <a href="#Eclipse-setup" accesskey="u" rel="up">Eclipse setup</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Work-on-existing-coding-projects"></span><h4 class="subsection">6.1.2 Work on existing coding projects</h4>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#Import-existing-project" accesskey="1">Import existing project</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Import-different-project" accesskey="2">Import different project</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<span id="Import-existing-project"></span><div class="header">
+<p>
+Next: <a href="#Import-different-project" accesskey="n" rel="next">Import different project</a>, Up: <a href="#Existing-projects" accesskey="u" rel="up">Existing projects</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Import-an-existing-project"></span><h4 class="subsubsection">6.1.2.1 Import an existing project</h4>
+
+
+<p>Second, import Daikon into Eclipse.  To import:  start Eclipse, then choose
+menu item &lsquo;<samp>File-&gt;Import-&gt;ExistingProjectIntoWorkspace</samp>&rsquo;, then enter (the full
+name of) directory <samp>$DAIKONDIR/java</samp> for Project Contents.
+</p>
+<p>Those two steps are all there is to it!
+</p>
+<p>(This simple procedure works because there are already
+<samp>.project</samp> and <samp>.classpath</samp> files in <samp>$DAIKONDIR/java</samp>.
+To import a project that doesn&rsquo;t have these files, you would need to create
+them (for instance, copy them from Daikon&rsquo;s), or else follow a different
+procedure to work on your project in Eclipse.)
+</p>
+
+<hr>
+<span id="Import-different-project"></span><div class="header">
+<p>
+Previous: <a href="#Import-existing-project" accesskey="p" rel="prev">Import existing project</a>, Up: <a href="#Existing-projects" accesskey="u" rel="up">Existing projects</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Importing-a-different-existing-project"></span><h4 class="subsubsection">6.1.2.2 Importing a different existing project</h4>
+
+<p>Before working on code in Eclipse, you must import the code into
+the Eclipse workspace.  You also need to set up various compilation
+settings and specify jars and classes that should be in the
+compilation classpath.  (By default, Eclipse does not use your
+<code>CLASSPATH</code> environment variable.)
+</p>
+<ol>
+<li> Change to the Java perspective by selecting &quot;Java Perspective&quot; in
+the perspective menu on the far-left tool panel.  You should see some
+of the windows move around to a structure similar to the screenshot
+below.
+
+</li><li> Select the menu item File-&gt;New-&gt;Project
+
+</li><li> On the popup window, select Java Project and click Next
+
+</li><li> Call the project &lsquo;<samp>Daikon</samp>&rsquo; or some other appropriate name and
+click Next.
+
+</li><li> On the next window, create a new folder in
+the project called <samp>src</samp>, and answer Yes to the next dialog box asking
+you to confirm a change in the build directory. Select &lsquo;<samp>Ok</samp>&rsquo; and you
+should see the new Project as a small folder icon in the package
+explorer.
+
+</li><li> Select the menu item File-&gt;Import
+
+</li><li> On the next popup window, select &lsquo;<samp>File System</samp>&rsquo; and click
+Next. Browse to the folder containing your source code.  Using the
+standard &lsquo;<samp>PAG</samp>&rsquo; setup, the folder should be <samp>$DAIKONDIR/java</samp>. The import
+destination should be <samp>Daikon/src</samp>.  Check the boxes for including
+Daikon, &lsquo;<samp>jtb</samp>&rsquo;, and plume.
+
+</li><li> Finally, add the required jars for Daikon by right-clicking on
+the project and selecting the Properties menu.  Select &quot;Java Build
+Path&quot;, then &quot;Libraries&quot;, then &quot;Add External Jars&quot; and add <samp>tools.jar</samp>
+and all <samp>.jar</samp> files in <samp>daikon/java/lib/</samp>.
+</li></ol>
+
+<p>Note that if you follow these directions, then
+<b>the compiled classes do not appear in the directory from
+which you imported in the previous step</b>.
+Instead, the compiled classes appear in the Eclipse workspace
+directory. If you followed the setup instructions above, then the
+compiled code will be in &quot;$HOME/.eclipse/Daikon/bin&quot;, which you
+should add to your classpath in order to use the updates you make from
+Eclipse.
+</p>
+
+<hr>
+<span id="External-tools"></span><div class="header">
+<p>
+Next: <a href="#Eclipse-debugger" accesskey="n" rel="next">Eclipse debugger</a>, Previous: <a href="#Existing-projects" accesskey="p" rel="prev">Existing projects</a>, Up: <a href="#Eclipse-setup" accesskey="u" rel="up">Eclipse setup</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Interaction-with-external-tools"></span><h4 class="subsection">6.1.3 Interaction with external tools</h4>
+
+<p>Eclipse compiles your project whenever you save.
+However, it parses frequently during editing and issues most or all of the
+errors and warnings that the compiler would have.  In order to clear a
+warning/error (in the Task List), you must save the file, however.
+</p>
+<p>If you change files outside Eclipse, you should refresh Eclipse, via
+right-clicking on the project or via menu item File &gt;&gt; Refresh.
+</p>
+
+<hr>
+<span id="Eclipse-debugger"></span><div class="header">
+<p>
+Next: <a href="#Using-Git-with-Eclipse" accesskey="n" rel="next">Using Git with Eclipse</a>, Previous: <a href="#External-tools" accesskey="p" rel="prev">External tools</a>, Up: <a href="#Eclipse-setup" accesskey="u" rel="up">Eclipse setup</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Using-the-Eclipse-debugger"></span><h4 class="subsection">6.1.4 Using the Eclipse debugger</h4>
+
+<p>To begin debugging, you can click on the bug icon in the toolbar or
+select Run-&gt;Debug from the menu.  You will see the same window as if
+you selected Run-&gt;Run, but when the Java application launches, Eclipse
+will switch to the Debugging Perspective, which reveals many windows
+such as the stack trace window, the variable values window, and the
+step control panel.
+</p>
+<p>Debugging features (window locations given for default setup):
+</p>
+<ul>
+<li> Breakpoints: You can add breakpoints during editing by
+double-clicking on the left margin area of the source code.  When
+debugging, the program halts when it reaches a breakpoint.
+
+</li><li> Stack Trace: Once the program halts at a breakpoint, the window
+in the upper-left corner window show the stack trace.
+
+</li><li> Step Controls: Once the program halts at a breakpoint, the panels
+just below the stack trace allow you to step through the code one line
+at a time (step over), resume execution as normal (resume), step down
+into a method call (step into), or execute until leaving the current
+method (Step return).
+
+</li><li> Variables: On the top right window, there is a tab pane that displays
+the values of objects and fields during a breakpoint halt.  You can also
+type in any legal Java expression that could appear at the breakpoint,
+and the window will display the value of the expression (don&rsquo;t forget to
+put a semi-colon at the end of your expression!).
+</li></ul>
+
+
+<hr>
+<span id="Using-Git-with-Eclipse"></span><div class="header">
+<p>
+Previous: <a href="#Eclipse-debugger" accesskey="p" rel="prev">Eclipse debugger</a>, Up: <a href="#Eclipse-setup" accesskey="u" rel="up">Eclipse setup</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Using-Git-with-Eclipse-1"></span><h4 class="subsection">6.1.5 Using Git with Eclipse</h4>
+
+<p>This section has yet to be written, although you can just do all the editing,
+compiling, and
+running from the Eclipse IDE while doing version control commands from the shell
+or whatever current system you use.
+</p>
+
+<hr>
+<span id="Editing-daikon_002etexinfo"></span><div class="header">
+<p>
+Previous: <a href="#Eclipse-setup" accesskey="p" rel="prev">Eclipse setup</a>, Up: <a href="#Editing" accesskey="u" rel="up">Editing</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Editing-daikon_002etexinfo-1"></span><h3 class="section">6.2 Editing daikon.texinfo</h3>
+
+<p>The Daikon manual appears in <samp>doc/daikon.texinfo</samp>.  The manual is
+written using the Texinfo formatting system, which makes it easy to produce
+HTML, info, or printed (PDF) output.
+</p>
+<p>You can edit the manual using an ordinary text editor.  Emacs has a
+useful Texinfo mode.  You can mimic the formatting commands that
+already appear in the manual, but it&rsquo;s also a good idea to read the
+<a href="http://www.gnu.org/software/texinfo/">Texinfo documentation</a>.
+</p>
+<p>If you wish to create a new section of the manual, insert two lines like
+the following:
+</p>
+<div class="example">
+<pre class="example">@node    @<em>Short title</em>
+@<em>chapter</em> @<em>Long title</em>
+</pre></div>
+
+<p>where you select the short and the long titles (which may
+be the same), and you may replace <code>@chapter</code> by <code>@section</code>,
+<code>@subsection</code>, or <code>@subsubsection</code>.
+</p>
+<p>Follow the Texinfo conventions for marking up text.  In particular:
+</p><ul>
+<li> Don&rsquo;t use regular double quotes (&quot;) in running text.  Instead, use
+two single back quotes and two regular quotes, &ldquo;like this&rdquo;.  Emacs will
+do this substitution for you if you are using its Texinfo mode.
+
+</li><li> Often, some other kind of markup is better than quotes:
+<ul>
+<li> <code>@code</code> is for names of classes, functions, variables, keywords, and
+      other fragments of source code.
+</li><li> <code>@var</code> is for meta-syntactic variables, not for referring to variables
+      that appear literally in the source code.
+</li><li> <code>@file</code> is for the names of files.
+</li><li> <code>@option</code> is for command-line options.
+</li><li> <code>@samp</code> is for sample input or output.  (Alternatively, you can use
+      <code>@example</code> to set off longer input/output strings.)
+</li><li> <code>@command</code> is for command lines.
+</li></ul>
+
+</li><li> Examples shouldn&rsquo;t include extra spaces on the left for
+indentation since Texinfo already adds some indentation.  Remember
+that in code examples you need to replace all curly braces with { and }
+to quote them for Texinfo.
+
+</li><li> Don&rsquo;t mix <code>@example</code> and <code>@smallexample</code> in the same section since it
+looks funny to have examples in two different sized fonts.  If your example
+is too wide to fit on the page with <code>@example</code>, it&rsquo;s better to insert some
+line breaks to make it more readable than to shrink the font.
+</li></ul>
+
+<p>Once you have edited the manual, run <code>make</code> twice (yes, you must run
+it twice) in order to generate formatted versions of the manual
+(<samp>daikon.</samp>{<samp>html</samp>,<samp>pdf</samp>}).
+</p>
+
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="#Eclipse-setup" accesskey="p" rel="prev">Eclipse setup</a>, Up: <a href="#Editing" accesskey="u" rel="up">Editing</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

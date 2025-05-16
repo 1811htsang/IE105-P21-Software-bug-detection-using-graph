@@ -1,0 +1,770 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
+<head><link rel="icon" href="../daikon-favicon.png" type="image/png"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Extending Daikon (The Daikon Invariant Detector Developer Manual)</title>
+
+<meta name="description" content="Extending Daikon (The Daikon Invariant Detector Developer Manual)">
+<meta name="keywords" content="Extending Daikon (The Daikon Invariant Detector Developer Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html" rel="start" title="Top">
+<link href="General-Index.html" rel="index" title="General Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html" rel="up" title="Top">
+<link href="Debugging-Daikon.html#Debugging-Daikon" rel="next" title="Debugging Daikon">
+<link href="Introduction.html" rel="prev" title="Introduction">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<span id="Extending-Daikon"></span><div class="header">
+<p>
+Next: <a href="Debugging-Daikon.html#Debugging-Daikon" accesskey="n" rel="next">Debugging Daikon</a>, Previous: <a href="Introduction.html" accesskey="p" rel="prev">Introduction</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Extending-Daikon-1"></span><h2 class="chapter">2 Extending Daikon</h2>
+
+<span id="index-extending-Daikon"></span>
+<span id="index-changing-Daikon"></span>
+<span id="index-customizing-Daikon"></span>
+<span id="index-modifying-Daikon"></span>
+
+<p>This chapter describes how to customize or modify Daikon.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#Compiling-Daikon" accesskey="1">Compiling Daikon</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Source-code-_0028version-control-repository_0029" accesskey="2">Source code (version control repository)</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Using-Eclipse" accesskey="3">Using Eclipse</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#New-invariants" accesskey="4">New invariants</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#New-derived-variables" accesskey="5">New derived variables</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#New-formatting-for-invariants" accesskey="6">New formatting for invariants</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#New-front-ends" accesskey="7">New front ends</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#New-suppressors" accesskey="8">New suppressors</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Reading-dtrace-files" accesskey="9">Reading dtrace files</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#System_002eexit">System.exit</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<span id="Compiling-Daikon"></span><div class="header">
+<p>
+Next: <a href="#Source-code-_0028version-control-repository_0029" accesskey="n" rel="next">Source code (version control repository)</a>, Up: <a href="#Extending-Daikon" accesskey="u" rel="up">Extending Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Compiling-Daikon-1"></span><h3 class="section">2.1 Compiling Daikon</h3>
+
+<span id="index-compiling-Daikon"></span>
+
+<p>To compile Daikon, type <code>make</code> in <samp>$DAIKONDIR/java/</samp> or any of its
+subdirectories.  Alternately, type <code>make -C $DAIKONDIR compile</code>.
+To create the <samp>daikon.jar</samp> file, type <code>make -C $DAIKONDIR daikon.jar</code>.
+</p>
+<p>The distribution includes <samp>daikon.jar</samp> and compiled <samp>.class</samp> files,
+so you do not need to compile them yourself unless you make changes.
+</p>
+<p>For more information about compiling Daikon, see the comments in the Makefiles.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#Requirements-for-compiling-Daikon" accesskey="1">Requirements for compiling Daikon</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+<hr>
+<span id="Requirements-for-compiling-Daikon"></span><div class="header">
+<p>
+Up: <a href="#Compiling-Daikon" accesskey="u" rel="up">Compiling Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Requirements-for-compiling-Daikon-1"></span><h4 class="subsection">2.1.1 Requirements for compiling Daikon</h4>
+
+<p>Before compiling Daikon, you need to install some dependencies (that is,
+software used to build Daikon).  For
+<a href="https://github.com/codespecs/daikon/blob/master/scripts/Dockerfile-rockylinux-jdk17-plus">Rocky Linux</a> and
+<a href="https://github.com/codespecs/daikon/blob/master/scripts/Dockerfile-ubuntu-jdk17-plus">Ubuntu</a>, you can
+find the commands to install these dependencies in file
+<samp>$DAIKONDIR/scripts/Dockerfile-<em>OSNAME</em>-jdk<em>N</em>-plus</samp>.
+For other operating systems, use similar commands.
+</p>
+<p>Note that Kvasir, the Daikon front end for the C language
+(see <a href="../daikon/Kvasir.html#Kvasir">Kvasir</a> in <cite>Daikon User Manual</cite>), does not work on Mac OS.
+</p>
+<span id="index-_002ejpp-files"></span>
+<span id="index-jpp-files"></span>
+
+<p>The Daikon build process uses the C preprocessor
+<code>cpp</code> to convert each <samp>.jpp</samp> file in the
+distribution into multiple <samp>.java</samp> files, which are then compiled.
+If you have a C compiler, you almost certainly have <code>cpp</code>.
+</p>
+
+<hr>
+<span id="Source-code-_0028version-control-repository_0029"></span><div class="header">
+<p>
+Next: <a href="#Using-Eclipse" accesskey="n" rel="next">Using Eclipse</a>, Previous: <a href="#Compiling-Daikon" accesskey="p" rel="prev">Compiling Daikon</a>, Up: <a href="#Extending-Daikon" accesskey="u" rel="up">Extending Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Source-code-_0028version-control-repository_0029-1"></span><h3 class="section">2.2 Source code (version control repository)</h3>
+
+<span id="index-source-code"></span>
+<span id="index-repository"></span>
+<span id="index-Git-repository"></span>
+<span id="index-version-control-repository"></span>
+
+<p>The Daikon git repository is located on GitHub;
+see <a href="https://github.com/codespecs/daikon/">https://github.com/codespecs/daikon/</a>.
+</p>
+<p>After making a local clone, see <a href="#Compiling-Daikon">Compiling Daikon</a>, for instructions
+on how to compile Daikon.
+</p>
+
+<hr>
+<span id="Using-Eclipse"></span><div class="header">
+<p>
+Next: <a href="#New-invariants" accesskey="n" rel="next">New invariants</a>, Previous: <a href="#Source-code-_0028version-control-repository_0029" accesskey="p" rel="prev">Source code (version control repository)</a>, Up: <a href="#Extending-Daikon" accesskey="u" rel="up">Extending Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Using-Eclipse-1"></span><h3 class="section">2.3 Using Eclipse</h3>
+
+<span id="index-Eclipse"></span>
+
+<p>[To be improved.]
+</p>
+<p>Here is one way to use Eclipse to edit Daikon.
+</p>
+<p>First, make sure that Daikon builds cleanly from the command line.
+</p>
+<p>File &gt; Import &gt; General &gt; Existing Projects into Workspace
+</p>
+<p>Choose the <samp>java</samp> directory of your Daikon checkout
+</p>
+<p>Project &gt; properties &gt; Java build path:
+ libraries : <code>add external jars</code> everything in the lib/ directory,
+   plus also the <samp>tools.jar</samp> file in the <samp>lib/</samp> directory of your JDK.
+   (I&rsquo;m not sure why, but <code>add jars</code> doesn&rsquo;t show all <samp>.jar</samp>
+   files in the directory.)
+</p>
+<p>Source:
+   add <samp>Daikon</samp>, remove <samp>Daikon/src</samp>.
+   Default output folder: change from <samp>Daikon/bin</samp> to <samp>Daikon</samp>.
+</p>
+
+<hr>
+<span id="New-invariants"></span><div class="header">
+<p>
+Next: <a href="#New-derived-variables" accesskey="n" rel="next">New derived variables</a>, Previous: <a href="#Using-Eclipse" accesskey="p" rel="prev">Using Eclipse</a>, Up: <a href="#Extending-Daikon" accesskey="u" rel="up">Extending Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="New-invariants-1"></span><h3 class="section">2.4 New invariants</h3>
+
+<span id="index-new-invariants"></span>
+<span id="index-adding-new-invariants"></span>
+
+<p>You can easily write your own invariants and have Daikon check them,
+in addition to all the other invariants that are already part of Daikon.
+Adding a new invariant to Daikon requires writing one Java class, as
+explained below.
+</p><ul>
+<li> If you are willing to edit the Daikon source code, you should define the
+invariant in Daikon&rsquo;s source code, in a subdirectory of
+<samp>java/daikon/inv/</samp>.  Then, edit method <code>Daikon.setup_proto_invs</code> to
+call the new invariant&rsquo;s <code>get_proto</code> method and recompile Daikon.
+</li><li> If you do not wish to edit the Daikon source code, then compile the new
+invariant and put its <samp>.class</samp> file on your classpath.  Then, invoke
+Daikon with the <samp>--user_defined_invariant</samp> command-line argument
+(see <a href="../daikon/Options-to-control-invariant-detection.html#Options-to-control-invariant-detection">Options to control invariant detection</a> in <cite>Daikon User Manual</cite>).
+</li></ul>
+
+
+
+<p>The file <samp>java/daikon/inv/unary/scalar/Positive.java</samp> in the
+Daikon distribution contains a sample invariant.  This invariant is
+true if the variable is always positive (greater than zero).  This
+invariant is subsumed by other invariants in the system; it is provided
+only as a pedagogical example.  To enable the invariant, comment out the
+appropriate line in <code>Daikon.setup_proto_invs()</code>, then recompile
+Daikon.
+</p>
+
+<p>A Java class defining an invariant is a concrete subclass of one of the direct subclasses of
+<a href="http://plse.cs.washington.edu/daikon/download/api/daikon/inv/unary/UnaryInvariant.html"><code>UnaryInvariant</code></a>,
+<a href="http://plse.cs.washington.edu/daikon/download/api/daikon/inv/binary/BinaryInvariant.html"><code>BinaryInvariant</code></a>,
+or
+<a href="http://plse.cs.washington.edu/daikon/download/api/daikon/inv/ternary/TernaryInvariant.html"><code>TernaryInvariant</code></a>.
+A complete list of invariants appears in the body of
+<code>Daikon.setup_proto_invs()</code>.
+</p>
+<p>Daikon&rsquo;s invariants are first instantiated, then are presented samples
+(tuples of values for all the variables of interest to the invariant;
+this might be a 1-tuple, a 2-tuple, or a 3-tuple) in turn.  If any
+sample falsifies the invariant, the invariant destroys itself.  All
+remaining invariants at the end of the program run can be queried for
+their statistical confidence, then reported as
+likely to be true.
+</p>
+<p>You need to implement the abstract methods of <a href="http://plse.cs.washington.edu/daikon/download/api/daikon/inv/Invariant.html"><code>Invariant</code></a> that are not defined in one of the subclasses listed above.  You also need to define a constructor and a static method:
+</p>
+<dl compact="compact">
+<dt><code>protected <var>InvName</var>(PptSlice ppt)</code></dt>
+<dd><p>Constructor for class <var>InvName</var>.  Should only be called from
+<code>instantiate_dyn</code>.
+Its typical implementation is
+</p><div class="example">
+<pre class="example">super(ppt);
+</pre></div>
+
+</dd>
+<dt><code>public static <var>InvName</var> get_proto()</code></dt>
+<dd><p>Returns the prototype invariant used to create other invariants.  Its
+typical implementation is
+</p><div class="example">
+<pre class="example">if (proto == null)
+  proto = new InvName(null);
+return (proto);
+</pre></div>
+
+</dd>
+</dl>
+
+<p>Methods that need to be overridden that are defined in a subclass of
+&lsquo;<samp>Invariant</samp>&rsquo; include:
+</p>
+<dl compact="compact">
+<dt><code>public InvariantStatus check_modified(..., int count)</code></dt>
+<dt><code>public InvariantStatus add_modified(..., int count)</code></dt>
+<dd><p>Determines whether the invariant is true for a sample (a tuple of values).
+</p></dd>
+</dl>
+
+
+<p>You will eventually want to override one or more of these methods (see <a href="#New-formatting-for-invariants">New formatting for invariants</a>):
+</p>
+<dl compact="compact">
+<dt><code>public String format()</code></dt>
+<dt><code>public String repr()</code></dt>
+<dt><code>public String format_using(OutputFormat format)</code></dt>
+<dd><p>Returns a high-level printed representation of the
+invariant, for user output.
+</p></dd>
+</dl>
+
+
+<hr>
+<span id="New-derived-variables"></span><div class="header">
+<p>
+Next: <a href="#New-formatting-for-invariants" accesskey="n" rel="next">New formatting for invariants</a>, Previous: <a href="#New-invariants" accesskey="p" rel="prev">New invariants</a>, Up: <a href="#Extending-Daikon" accesskey="u" rel="up">Extending Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="New-derived-variables-1"></span><h3 class="section">2.5 New derived variables</h3>
+
+<span id="index-derived-variable"></span>
+<span id="index-variable_002c-derived"></span>
+<span id="index-adding-new-derived-variables"></span>
+<span id="index-new-derived-variables"></span>
+
+<p>A derived variable is an expression that does not appear in the source
+code as a variable, but that Daikon treats as a variable for purposes
+of invariant detection.  For instance, if there exists an array
+&lsquo;<samp>a</samp>&rsquo; and an integer &lsquo;<samp>i</samp>&rsquo;, then Daikon introduces the derived
+variable &lsquo;<samp>a[i]</samp>&rsquo;.  This permits detection of invariants over this
+quantity.
+</p>
+<p>(Describing how to create new variety of derived variable is still to
+be written.  For now, see the derived variables that appear in the Java
+files in directory <samp>$DAIKONDIR/java/daikon/derive/</samp>.)
+</p>
+
+<hr>
+<span id="New-formatting-for-invariants"></span><div class="header">
+<p>
+Next: <a href="#New-front-ends" accesskey="n" rel="next">New front ends</a>, Previous: <a href="#New-derived-variables" accesskey="p" rel="prev">New derived variables</a>, Up: <a href="#Extending-Daikon" accesskey="u" rel="up">Extending Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="New-formatting-for-invariants-1"></span><h3 class="section">2.6 New formatting for invariants</h3>
+
+<span id="index-output-format_002c-defining-new"></span>
+<span id="index-new-output-formats"></span>
+<span id="index-adding-new-output-formats"></span>
+
+<p>Daikon can print invariants in multiple formats
+(see <a href="../daikon/Invariant-syntax.html#Invariant-syntax">Invariant syntax</a> in <cite>Daikon User Manual</cite>).
+</p>
+<p>To support a new output format, you need to do two things:
+</p><ul>
+<li> In <code>daikon.inv.Invariant.OutputFormat</code>, add a new static final
+field and also update the <code>get</code> method.
+</li><li> In every subclass of <code>Invariant</code>, edit the
+<code>format_using</code> method to handle the new <code>OutputFormat</code>.
+</li></ul>
+
+<hr>
+<span id="New-front-ends"></span><div class="header">
+<p>
+Next: <a href="#New-suppressors" accesskey="n" rel="next">New suppressors</a>, Previous: <a href="#New-formatting-for-invariants" accesskey="p" rel="prev">New formatting for invariants</a>, Up: <a href="#Extending-Daikon" accesskey="u" rel="up">Extending Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="New-front-ends-1"></span><h3 class="section">2.7 New front ends</h3>
+
+<span id="index-front-end_002c-writing"></span>
+
+<p>A front end for Daikon converts data into a form Daikon can process,
+producing files in Daikon&rsquo;s input format &mdash; data trace declarations and
+records.  For more information about these files, see <a href="File-formats.html#File-formats">File formats</a>.
+</p>
+<p>The data traces can be obtained from any source.  For instance, front
+ends have been built for stock data, weather forecasts, truck weight
+data, and spreadsheet data (see <a href="../daikon/convertcsv_002epl.html#convertcsv_002epl">convertcsv.pl</a> in <cite>Daikon User
+Manual</cite>), among others.  More often, users apply a programming language
+front end (also called an <em>instrumenter</em>) to a program, causing
+executions of the program to write files in Daikon&rsquo;s format.  (For
+information about existing front ends, see
+<a href="../daikon/Front-ends-and-instrumentation.html#Front-ends-and-instrumentation">Front ends and instrumentation</a> in <cite>Daikon User Manual</cite>.)
+When a general front end is not
+available, it is possible to manually instrument a specific program so
+that it writes files in Daikon&rsquo;s format.  The resulting instrumented
+program is very similar to what an instrumenter would have created, so
+this section is relevant to both approaches.
+</p>
+<p>Conceptually, a front end instrumenter has two tasks.  Suppose you want to
+infer invariants at a program point (say, a line of code or the entry or
+exit from a procedure).  The front end must create a
+declaration (see <a href="File-formats.html#Declarations">Declarations</a>) that
+lists the variables in scope at that program point.  Every time that
+program point is executed, the program must output a data trace record
+(see <a href="File-formats.html#Data-trace-records">Data trace records</a>).  A front end can make the program output a
+data trace record by inserting a <code>printf</code> (or similar) statement that
+outputs the current
+values of the variables of interest.
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="#Example-instrumented-Java-program" accesskey="1">Example instrumented Java program</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#Instrumenting-C-programs" accesskey="2">Instrumenting C programs</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<span id="Example-instrumented-Java-program"></span><div class="header">
+<p>
+Next: <a href="#Instrumenting-C-programs" accesskey="n" rel="next">Instrumenting C programs</a>, Up: <a href="#New-front-ends" accesskey="u" rel="up">New front ends</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Example-instrumented-Java-program-1"></span><h4 class="subsection">2.7.1 Example instrumented Java program</h4>
+
+<span id="index-instrumenting-Java-programs"></span>
+<span id="index-Java-programs_002c-instrumenting"></span>
+
+<p>This section gives an example of how an instrumenter for Java might
+work; other languages are analogous.
+Suppose we wish to instrument file <samp>Example.java</samp>.
+</p><div class="example">
+<pre class="example">class Example {
+  // Return either the square of x or the square of (x+1).
+  int squar(int x, boolean b) {
+    if (b)
+      x++;
+    return x*x;
+  }
+}
+</pre></div>
+
+<p>The <samp>.decls</samp> file might look like the following.
+</p><div class="example">
+<pre class="example">DECLARE
+Example.squar:::ENTER
+x
+int
+int
+1
+b
+boolean
+int
+2
+
+DECLARE
+Example.squar:::EXIT
+x
+int
+int
+1
+b
+boolean
+int
+2
+return
+int
+int
+1
+</pre></div>
+
+<p>The instrumented <samp>.java</samp> file might look like the following.
+This example does not compute the &ldquo;modified bits&rdquo;, but simply sets
+them all to 1, which is a safe default.
+</p><div class="example">
+<pre class="example">class Example {
+  static {
+    daikon.chicory.Runtime.setDtraceMaybe(&quot;daikon-output/StackAr.dtrace&quot;);
+  }
+
+  // Return either the square of x or the square of (x+1).
+  int squar(int x, boolean b) {
+    synchronized (daikon.chicory.Runtime.dtrace) {
+      daikon.chicory.Runtime.dtrace.println();
+      daikon.chicory.Runtime.dtrace.println(&quot;Example.squar:::ENTER&quot;);
+      daikon.chicory.Runtime.dtrace.println(&quot;x&quot;);
+      daikon.chicory.Runtime.dtrace.println(x);
+      daikon.chicory.Runtime.dtrace.println(1);  // modified bit
+      daikon.chicory.Runtime.dtrace.println(&quot;b&quot;);
+      daikon.chicory.Runtime.dtrace.println(b ? 1 : 0);
+      daikon.chicory.Runtime.dtrace.println(1);  // modified bit
+    }
+
+    if (b)
+      x++;
+
+    int daikon_return_value = x*x;
+    synchronized (daikon.chicory.Runtime.dtrace) {
+      daikon.chicory.Runtime.dtrace.println();
+      daikon.chicory.Runtime.dtrace.println(&quot;Example.squar:::EXIT&quot;);
+      daikon.chicory.Runtime.dtrace.println(&quot;x&quot;);
+      daikon.chicory.Runtime.dtrace.println(x);
+      daikon.chicory.Runtime.dtrace.println(1);  // modified bit
+      daikon.chicory.Runtime.dtrace.println(&quot;b&quot;);
+      daikon.chicory.Runtime.dtrace.println(b ? 1 : 0);
+      daikon.chicory.Runtime.dtrace.println(1);  // modified bit
+      daikon.chicory.Runtime.dtrace.println(&quot;return&quot;);
+      daikon.chicory.Runtime.dtrace.println(daikon_return_value);
+      daikon.chicory.Runtime.dtrace.println(1);  // modified bit
+    }
+
+    return daikon_return_value;
+  }
+}
+</pre></div>
+
+<p>(Daikon&rsquo;s Java front end, Chicory, does not actually insert
+instrumentation into the Java source code of your program.  Rather, it
+instruments the bytecode as it is loaded into the JVM.  This is more
+efficient, and it avoids making any changes to your <samp>.java</samp> or
+<samp>.class</samp> files.  We have shown an example of  Java source code
+instrumentation because that is  simpler to explain and understand than
+the bytecode instrumentation.)
+</p>
+
+<hr>
+<span id="Instrumenting-C-programs"></span><div class="header">
+<p>
+Previous: <a href="#Example-instrumented-Java-program" accesskey="p" rel="prev">Example instrumented Java program</a>, Up: <a href="#New-front-ends" accesskey="u" rel="up">New front ends</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Instrumenting-C-programs-1"></span><h4 class="subsection">2.7.2 Instrumenting C programs</h4>
+
+<span id="index-C-programs_002c-instrumenting"></span>
+<span id="index-instrumenting-C-programs"></span>
+
+<p>Daikon comes with a front end for the C language:  Kvasir
+(see <a href="../daikon/Kvasir.html#Kvasir">Kvasir</a> in <cite>Daikon User Manual</cite>).
+Kvasir only works under the Linux operating system, and it works only on
+&ldquo;x86&rdquo; (Intel 386, 486, 586, 686 compatible) and &ldquo;x86-64&rdquo; (AMD64, EM64T
+compatible) processors.
+</p>
+<p>You may wish to infer invariants over C programs running on other
+platforms; for instance, you want a robust C front end that works under
+Microsoft Windows.  This section will help you to either write such a
+front end or to hand-instrument your program to produce output that
+Daikon can process.
+</p>
+<p>We welcome additions and corrections to this part of the manual.  And,
+if you write a C instrumenter that might be of use to others, please
+contribute it back to the Daikon project.
+</p>
+
+<p>A front end for C (or any other language) performs two tasks.  It
+determines the names of all variables that are in scope at a particular
+program point, and it prints the values of those variables each time the
+program point executes.
+</p>
+<p>Determining the names of the variables is straightforward.  It requires
+either parsing source code or parsing a compiled executable.  In the
+latter case, the variables can be determined from debugging information
+that the compiler places in the executable.
+</p>
+<p>The challenge for C programs is determining the values of variables at
+execution time:  for each variable, the front end must determine whether
+the variable&rsquo;s value is valid, and how big the value is.
+</p>
+<span id="index-valid-values"></span>
+<span id="index-invalid-values"></span>
+<span id="index-nonsensical-values"></span>
+<span id="index-uninitialized-variables"></span>
+<span id="index-deallocated-pointers"></span>
+
+<p>A front end should print only variables that have <em>valid</em> values.
+Examples of invalid values are variables that have not yet been
+initialized and pointers whose content has been deallocated.  (A pointer
+dereference, such as &lsquo;<samp>*p</samp>&rsquo; or &lsquo;<samp>p-&gt;field</samp>&rsquo;, can itself
+be to uninitialized and/or deallocated memory.)  Invalid values should
+be printed as &lsquo;<samp>nonsensical</samp>&rsquo; (see <a href="File-formats.html#Data-trace-records">Data trace records</a>).
+</p>
+<p>It is desirable to print &lsquo;<samp>nonsensical</samp>&rsquo; rather than an invalid value,
+for two reasons.  First, outputting nonsense values can degrade
+invariant detection; patterns in the valid data may be masked by noise
+from invalid values.  Second, an attempt to access an invalid value can
+cause the instrumented program to crash!  For instance, suppose that
+pointer &lsquo;<samp>p</samp>&rsquo; is not yet initialized &mdash; the pointer value refers to
+some arbitrary location in memory, possibly even an address that the
+operating system has not allocated to the program.  An attempt to print
+the value of &lsquo;<samp>*p</samp>&rsquo; or &lsquo;<samp>p-&gt;field</samp>&rsquo; will result in a segmentation
+fault when &lsquo;<samp>*p</samp>&rsquo; is accessed.  (If you choose never to dereference a
+pointer while performing instrumentation, then you do not need to worry
+about invalid references.  However, you will be unable to output any
+fields of a pointer to a struct or class, making your front end less
+useful.  You will still be able to output fields of a regular variable
+to a struct or class, but most interesting uses of structs and classes
+in C and C++ are through pointers.)
+</p>
+<p>C relies on the programmer to remember which variables are valid, and
+the programmer must take care never to access invalid variables.
+Unfortunately, there is no simple automatic way to determine variable
+validity for an arbitrary C program.  (Languages with automatic memory
+management, such as Java, do not pose these problems.  All variables
+always have an initial value, so there is no danger of printing
+uninitialized memory, though the initial value may not be particularly
+meaningful.  Because pointed-to memory is never deallocated, all
+non-null pointers are always valid, so there is no danger of a
+segmentation fault.)
+</p>
+<p>An instrumenter needs information about validity of variable values.
+This could be obtained from the programmer (which requires work on the
+part of the user of Daikon), or obtained automatically by creating a new
+run-time system that tracks the information (which requires a more
+sophisticated front end).
+</p>
+<p>In addition to determining which variables are uninitialized and which
+pointers are to allocated memory, there are additional problems for a C
+front end.  For example, given a char pointer &lsquo;<samp>*c</samp>&rsquo;, does it point
+to a single character, or to an array of characters?  If it points to an
+array of characters, how big is that array?  And for each element of the
+array, is that element initialized or not?
+</p>
+
+<p>The problem of tracking C memory may seem daunting, but it is not
+insurmountable.  There exist many tools for detecting or debugging
+memory errors in C, and they need to perform exactly the same memory
+tracking as a Daikon front end must perform.  Therefore, a Daikon front
+end can use the same well-known techniques, and possibly can even be
+built on top of such a tool.  For instance, one C front end, named Kvasir, is
+built on top of the Valgrind tool (<a href="https://valgrind.org/">https://valgrind.org/</a>),
+greatly reducing the implementation effort.  Valgrind only works under
+Linux, but a C front end for another platform could build on a similar
+tool; many other such tools exist.
+</p>
+
+<p>There are two basic approaches to instrumenting a C program (or a
+program in any other language):  instrument the source code, or
+instrument a compiled binary representation of the program.  In each
+case, additional code that tracks all memory allocations, deallocations,
+writes, and reads must be executed at run time.  Which approach is most
+appropriate for you depends on what tools you use when building your C
+instrumentation system.
+</p>
+
+<p>In some cases, it may not be necessary to build a fully general C
+instrumentation system.  You may be able to craft a smaller, simpler
+extension to an existing program &mdash; enabling that program (only) to
+produce files for Daikon to analyze.
+</p>
+<p>For instance, many programs use specialized memory allocation routines
+(customized versions of <code>malloc</code> and <code>free</code>), in order to
+prevent or detect memory errors.  The information that such libraries
+collect is often sufficient to determine which variable values should be
+printed, and which should be suppressed in favor of printing
+&lsquo;<samp>nonsensical</samp>&rsquo; instead.
+</p>
+
+<p>The presence of memory errors &mdash; even in a program that <em>appears</em>
+to run correctly &mdash; makes it much harder to create Daikon&rsquo;s output.
+Therefore, as a prerequisite to instrumenting a C program, it is usually
+a good idea to run a memory checker on that program and to eliminate any
+memory errors.
+</p>
+
+
+
+
+
+<hr>
+<span id="New-suppressors"></span><div class="header">
+<p>
+Next: <a href="#Reading-dtrace-files" accesskey="n" rel="next">Reading dtrace files</a>, Previous: <a href="#New-front-ends" accesskey="p" rel="prev">New front ends</a>, Up: <a href="#Extending-Daikon" accesskey="u" rel="up">Extending Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="New-suppressors-1"></span><h3 class="section">2.8 New suppressors</h3>
+
+<span id="index-adding-new-suppressors"></span>
+<span id="index-new-suppressors"></span>
+<span id="index-suppressors_002c-adding-new"></span>
+
+<p>As mentioned in <a href="Daikon-internals.html#Daikon-internals">Daikon internals</a>, one way to make Daikon more
+efficient, and to reduce clutter in the output to the user, is to reduce the
+number of redundant invariants of various kinds.  This section describes
+how to add a new suppressor relation, such that if invariant A implies
+B, B is not instantiated or checked as long as A holds, saving time and
+space.  Suppression implications use some terminology.  A
+<em>suppressor</em> (defined in the class <code>NISuppressor</code>) is one of a
+set of invariants (<code>NISuppression</code>) that imply and suppress a
+<em>suppressee</em> invariant (<code>NISuppressee</code>).  The set of all of
+the suppressions that suppress a particular <var>suppressee</var> is stored in the
+class <code>NISuppressionSet</code>.
+</p>
+<p>Adding a new suppression is straightforward when the invariants involved
+do not have any state.  Define the <var>suppressee</var> and
+each of the suppressions that suppress it using the corresponding
+constructors.  Add the method <code>get_ni_suppressions</code> to the class
+of the invariant being suppressed and return the appropriate
+suppression set.  Make sure that <code>get_ni_suppressions</code> always
+returns the same suppression set (i.e., that storage to store
+the suppressions is only allocated once).  Normally this is
+done by defining a static variable to hold the suppression sets
+and initializing this variable the first time that <code>get_ni_suppressions</code>
+is called.
+</p>
+<p>The following example defines suppressions for &lsquo;<samp>x == y</samp>&rsquo; implies
+&lsquo;<samp>x &gt;= y</samp>&rsquo; and &lsquo;<samp>x &gt; y</samp>&rsquo; implies &lsquo;<samp>x &gt;= y</samp>&rsquo;.
+</p>
+<div class="example">
+<pre class="example">private static NISuppressionSet suppressions = null;
+
+public NISuppressionSet get_ni_suppressions() {
+  if (suppressions == null) {
+    NISuppressee = new NISuppressee(IntGreaterEqual);
+
+    NISuppressor v1_eq_v2 = new NISuppressor(0, 1, IntEqual.class);
+    NISuppressor v1_lt_v2 = new NISuppressor(0, 1, IntLessThan.class);
+
+    suppressions = new NISuppressionSet(new NISuppression[] {
+      new NISuppression(v1_eq_v2, suppressee),
+      new NISuppression(v1_lt_v2, suppressee),
+    });
+  }
+  return suppressions;
+}
+</pre></div>
+
+<p>For suppressions depending on the state of a particular invariant,
+each <code>Invariant</code> has an <code>isObviousDynamically(VarInfo[] vis)</code>
+method that is called once the state of other invariants has already
+been determined.  This method returns a non-null value if this invariant
+is implied by a fact that can be derived from the given <code>VarInfo</code>s.
+</p>
+<p>For example, suppose division was not defined for divisors smaller than 1.
+The following example defines an obvious check for &lsquo;<samp>x &lt;= c</samp>&rsquo;
+(where c &lt; 1 is a constant) implies &lsquo;<samp>y % x == 0</samp>&rsquo;, written in the
+Divides class.
+</p>
+<div class="example">
+<pre class="example">public DiscardInfo isObviousDynamically(VarInfo[] vis) {
+  DiscardInfo di = super.isObviousDynamically(vis);
+  if(di != null) {
+    return di;
+  }
+
+  VarInfo var1 = vis[0];
+
+  PptSlice1 ppt_over1 = ppt.parent.findSlice(var1);
+
+  if(ppt_over1 == null) {
+    return null;
+  }
+
+  for(Invariant inv : ppt_over1.invs) {
+    if(inv instanceof UpperBound) {
+      if(((UpperBound) inv).max() &lt; 1) {
+        return new DiscardInfo(this, DiscardCode.obvious,
+                       &lsquo;<samp>Divides is obvious when divisor less than one</samp>&rsquo;);
+      }
+    }
+  }
+
+  return null;
+}
+</pre></div>
+
+
+<hr>
+<span id="Reading-dtrace-files"></span><div class="header">
+<p>
+Next: <a href="#System_002eexit" accesskey="n" rel="next">System.exit</a>, Previous: <a href="#New-suppressors" accesskey="p" rel="prev">New suppressors</a>, Up: <a href="#Extending-Daikon" accesskey="u" rel="up">Extending Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="Reading-dtrace-files-1"></span><h3 class="section">2.9 Reading dtrace files</h3>
+
+<p>If you wish to write a program that manipulates a <samp>.dtrace</samp> file, you
+can use Daikon&rsquo;s built-in mechanisms for parsing <samp>.dtrace</samp> files.
+(This is easier and less error-prone than writing your own parser.)
+</p>
+<p>You will write a subclass of <code>FileIO.Processor</code>, then pass an instance
+of that class to <code>FileIO.read_data_trace_files</code>.  Daikon will parse
+each record in the trace files that you indicate, then will pass the parsed
+version to methods in your processor.
+</p>
+<p>For a simple example of how to use <code>FileIO.Processor</code>, see the file
+<br>
+<samp>daikon/java/daikon/tools/ReadTrace.java</samp>.
+</p>
+
+<hr>
+<span id="System_002eexit"></span><div class="header">
+<p>
+Previous: <a href="#Reading-dtrace-files" accesskey="p" rel="prev">Reading dtrace files</a>, Up: <a href="#Extending-Daikon" accesskey="u" rel="up">Extending Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<span id="System_002eexit-1"></span><h3 class="section">2.10 System.exit</h3>
+
+<p>The Daikon codebase does not call <code>System.exit()</code>, except in a
+dummy main method that catches <code>TerminationMessage</code>, which is the
+standard way that a component of Daikon requests the JVM to shut down.
+</p>
+<p>The reason for this is that calling <code>System.exit()</code> is usually a
+bad idea.  It makes the class unusable as a subroutine, because it
+might kill the calling program.  It can cause deadlock.  And it can
+leave data in an inconsistent state (for example, if the program was in
+the middle of writing a file, still held non-Java locks, etc.), because
+the program has no good way of completing any actions that it was in the
+middle of.  Therefore, it is better to throw an exception and let the
+program handle it appropriately.  (This is true of instrumentation code
+as well.)
+</p>
+<p>To see the stack trace for a <code>TerminationMessage</code>, pass
+<samp>--config_option daikon.Debug.show_stack_trace=true</samp> on the command
+line.
+</p>
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="#Reading-dtrace-files" accesskey="p" rel="prev">Reading dtrace files</a>, Up: <a href="#Extending-Daikon" accesskey="u" rel="up">Extending Daikon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="General-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

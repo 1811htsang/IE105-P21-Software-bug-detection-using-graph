@@ -1,0 +1,41 @@
+jobs:
+
+- job: ubuntu_stable
+  pool:
+    vmImage: 'ubuntu-latest'
+  container: mdernst/daikon-ubuntu-jdk8-plus:latest
+  steps:
+  - checkout: self
+    fetchDepth: 25
+  - bash: ./test.sh
+    displayName: test.sh
+
+- job: ubuntu_rolling
+  pool:
+    vmImage: 'ubuntu-latest'
+  container: mdernst/daikon-ubuntu-jdk19-plus:latest
+  steps:
+  - checkout: self
+    fetchDepth: 25
+  - bash: ./test.sh
+    displayName: test.sh
+
+- job: fedora
+  pool:
+    vmImage: 'ubuntu-latest'
+  container: mdernst/daikon-fedora-jdk8-plus:latest
+  steps:
+  - checkout: self
+    fetchDepth: 25
+  - bash: ./test.sh
+    displayName: test.sh
+
+- job: rocky
+  pool:
+    vmImage: 'ubuntu-latest'
+  container: mdernst/daikon-rockylinux-jdk8-plus:latest
+  steps:
+  - checkout: self
+    fetchDepth: 25
+  - bash: ./test.sh
+    displayName: test.sh
