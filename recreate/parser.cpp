@@ -41,7 +41,7 @@ public:
     */
 };
 
-#define DEBUG false
+#define DEBUG true
 
 int IPC_LEVELS = 1; 
 // default levels of inter-procedural analysis (1 turns it off completely)
@@ -295,7 +295,7 @@ void analyze()
 	{
 		for (map<int, FunctionPair>::iterator j = Pairs[i].begin(); j != Pairs[i].end();)
 		{
-			FunctionPair &p = j->second;
+			FunctionPair &p = j->second; // get the function pair
 			temp = j;
 			++j;
 			p.confidence = (float(p.support) * 100.0f) / float(support[p.a]);
@@ -352,6 +352,11 @@ void find_bugs()
 					{
 						pairname = demangle(id_to_func[p.b]) + " " + demangle(id_to_func[p.a]);
 					}
+					// add rule to remove bug contain specifically remove any bug that is related to built-in functions of C or C++
+					
+					
+					
+
 					cout << "bug may appear: " << demangle(id_to_func[p.a]) << " in " << demangle(id_to_func[i->first]) << " pair: (" << pairname << ") ";
 					cout << "support: " << p.support << " confidence: " << fixed << setprecision(2) << p.confidence << "%" << endl;
 				}
