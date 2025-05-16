@@ -46,6 +46,13 @@ g++ -g filename.cpp -o filename
     - change usr/.../opt to `opt -passes=print-callgraph` in `pipair` file.
 ---
 
+- Due to valgrind output the result into the standard error output `stderr`, so you have to redirect the output to a file and then read the file to get the result. You can use `2>` to redirect the standard error output to a file.
+- For example:
+```bash
+valgrind --tool=memcheck ./filename &>> valgrind_output.txt
+```
+---
+
 - This folder and sample-project folder are somehow related to method of using likely-invariant to detect bugs in the program. This method idea is also found in related repository from University of Waterloo and Purdue Univeristy, especially from prof Lin Tan as follow [Automated-Bug-Detection-Tool](https://github.com/cehan-Chloe/Automated-Bug-Detection-Tool), [653-project](https://github.com/Yuzy7/653-Project) and [BugDetector](https://github.com/jkottapa/BugDetector.git), [BugDetectionTool](https://github.com/ileb325/BugDetectionTool), [Software-Testing-Quality-Assurance-and-Maintenance](https://github.com/sai-teja-ponugoti/Software-Testing-Quality-Assurance-and-Maintenance), [ECE-653](https://github.com/Kyxie/ECE-653), [se465-project](https://github.com/pmlakner/se465-project/) . The author also found some instruction from CS510 course at [here](https://www.coursesidekick.com/computer-science/1408082), although at later found the project instruction in [653-project](https://github.com/Yuzy7/653-Project) (branch `Yameng-Li` for document `IE105-D-12` and `Yameng-Li-1` for document `IE105-D-13`) and [se465-project](https://github.com/pmlakner/se465-project/). 
 
 ---

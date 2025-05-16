@@ -64,7 +64,7 @@ void A() {
   printf("A\n");
 
   int a[5] = {1, 2, 3, 4, 5};
-  printf("%d\n", a[10]);
+  printf("%d\n", a[3]);
 }
 
 void B() {
@@ -77,7 +77,9 @@ void C() {
   while (i > 0) {
     printf("%d\n", i);
     i++;
-    (--i) % (i++) * (++i)--;
+    if (i > 10) {
+      break;
+    }
   }
 }
 

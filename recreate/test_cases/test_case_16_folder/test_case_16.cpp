@@ -16,8 +16,6 @@ int DemChuInHoa(char hoten[]) {
     return dem;
 }
 int main(){
-    char hoten[MAXN];
-    NhapChuoi(hoten);
-    std::cout << DemChuInHoa(hoten) << endl;
+    std::cout << DemChuInHoa("HuynhThanhSang") << endl;
     return 0;
 }

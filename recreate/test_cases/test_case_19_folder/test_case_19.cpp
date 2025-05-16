@@ -5,7 +5,7 @@ using namespace std;
 int main() {
     ios::sync_with_stdio(false); 
     cin.tie(0); cout.tie(0);
-    int n; cin >> n;
+    int n = 7;
     if (n < 3 || n > 10){
         cout << "Khong thoa dieu kien nhap.";
     } else {

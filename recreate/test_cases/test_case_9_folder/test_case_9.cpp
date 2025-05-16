@@ -4,10 +4,10 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
   int n, x, count = 0;
-  cin >> n;
+  n = 2;
 
   for (int i = 0; i < n; i++) {
-    cin >> x;
+    x = 300;
 
     if (!(x % 2)) {
       bool flag = true;

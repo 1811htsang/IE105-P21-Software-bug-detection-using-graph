@@ -31,14 +31,9 @@ do
         folder_name=$(basename "$folder")
         echo "In processing folder: $folder_name"
 
-        # Delete all .out files generated previously
-        find "$folder" -type f -name "generated_callgraph.out" -exec rm -f {} \;
-
-        # Delete all .bc files generated previously
-        find "$folder" -type f -name "*.bc" -exec rm -f {} \;
-
-        # Delete all .log files generated previously
-        find "$folder" -type f -name "*.log" -exec rm -f {} \;
+        # Delete all file except .cpp files
+        find "$folder" -type f ! -name "*.cpp" -exec rm -f {} \;
+        
     fi
 done
 

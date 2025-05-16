@@ -11,8 +11,6 @@ bool isPrime(int n)
     return true;
 }
 int main() {
-    cout << boolalpha;
-    int n; cin >> n;
-    cout << isPrime(n);
+    cout << isPrime(23939);
     return 0;
 }
