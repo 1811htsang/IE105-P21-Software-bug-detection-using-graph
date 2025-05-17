@@ -54,7 +54,7 @@ void scope4() {
   scope2();
 
   {
-    int i = 10;
+    int i = 2;
     while (i > 0) {
       printf("%d\n", i);
       scope1();

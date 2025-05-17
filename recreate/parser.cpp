@@ -41,7 +41,7 @@ public:
     */
 };
 
-#define DEBUG true
+#define DEBUG false
 
 int IPC_LEVELS = 1; 
 // default levels of inter-procedural analysis (1 turns it off completely)
@@ -353,9 +353,10 @@ void find_bugs()
 						pairname = demangle(id_to_func[p.b]) + " " + demangle(id_to_func[p.a]);
 					}
 					// add rule to remove bug contain specifically remove any bug that is related to built-in functions of C or C++
-					
-					
-					
+					if (pairname.find("std::") != string::npos || pairname.find("::") != string::npos)
+					{
+						continue;
+					}
 
 					cout << "bug may appear: " << demangle(id_to_func[p.a]) << " in " << demangle(id_to_func[i->first]) << " pair: (" << pairname << ") ";
 					cout << "support: " << p.support << " confidence: " << fixed << setprecision(2) << p.confidence << "%" << endl;
