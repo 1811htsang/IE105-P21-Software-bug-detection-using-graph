@@ -41,7 +41,7 @@ public:
     */
 };
 
-#define DEBUG false
+#define DEBUG true
 
 int IPC_LEVELS = 1; 
 // default levels of inter-procedural analysis (1 turns it off completely)
