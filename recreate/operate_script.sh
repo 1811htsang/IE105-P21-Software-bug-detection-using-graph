@@ -21,6 +21,7 @@ rm -f "$base_dir"/parser
 
 # Delete all .out files generated previously
 # Check if any output .out file exists, then remove
+# Run in number order
 for folder in "$test_case_dir"/test_case_*_folder;
 do
     # Check if the directory exists
@@ -43,7 +44,7 @@ g++ "$base_dir"/parser.cpp -o "$base_dir"/parser
 # Compile the test cases
 # Loop through each test_case_x_folder directory
 # The order is from 1 to end
-for folder in "$test_case_dir"/test_case_*_folder; 
+for folder in "$test_case_dir"/test_case_*_folder;
 do
     # Check if the directory exists
     if [ -d "$folder" ]; then
