@@ -1,3 +1,0 @@
-Premain-Class: daikon.dcomp.Premain
-Can-Retransform-Classes: true
-Can-Redefine-Classes: true

@@ -117,7 +117,10 @@ do
 
             # Echo for splitting the output of each tool
             echo "" >> "$folder"/stderr_output.out
-            echo "call graph information:" >> "$folder"/stderr_output.out
+            echo "valgrind call graph information:" >> "$folder"/stderr_output.out
+
+            # Generate the call graph using valgrind
+            valgrind --tool=callgrind /"$folder"/"$cpp_file_name" &>> "$folder"/stderr_output.out
 
             # File bitcode will be generated in the same directory as the .cpp file
             clang++ -emit-llvm -c "$cpp_file" -o "$cpp_file_name.bc" 2> "$folder"/clang_compile_errors.log
@@ -128,6 +131,9 @@ do
             # Echo for splitting the output of each tool
             echo "" >> "$folder"/stderr_output.out
             echo "pipeline information:" >> "$folder"/stderr_output.out
+
+            # wait for 1 second
+            sleep 1
 
             # Create the call graph using opt and redirect the output to a file
             opt -passes=print-callgraph "$folder/$cpp_file_name.bc" 2>&1 >/dev/null | ./parser "$ipc_level" "$support_level" "$confidence_level" >> "$folder"/stderr_output.out
@@ -197,7 +203,7 @@ do
 
         # Summarize the bugs found in each folder
         echo "" >> "$folder"/stderr_output.out
-        echo "Total bugs: $bug_count" >> "$folder"/stderr_output.out
+        echo "Total bugs may appear: $bug_count" >> "$folder"/final_output.out
 
         # echo "Bugs found in $(basename "$folder"): $bug_count"
         ((total_bugs+=bug_count))

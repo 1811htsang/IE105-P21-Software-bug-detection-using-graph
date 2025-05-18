@@ -1,45 +1,13 @@
+#include <thread>
 #include <iostream>
-
-#include <map>
-
- 
-
-int main()  
-
+void f(int id)
 {
-
-    std::map <int, std::string> Country;
-
-    std::map <int, std::string>::const_iterator i;
-
-    Country.insert(std::pair <int, std::string>(1, "USA"));
-
-    Country.insert(std::pair <int, std::string>(7, "Russia"));
-
-    Country.insert(std::pair <int, std::string>(33, "France"));
-
-    Country.insert(std::pair <int, std::string>(39, "Italy"));
-
-    Country.insert(std::pair <int, std::string>(49, "Germany"));
-
-    Country.insert(std::pair <int, std::string>(61, "Australia"));
-
- 
-
-    std::cout << "ISD\tCountry " << std::endl;
-
-    std::cout << "---\t--------" << std::endl;
-
-    for (i = Country.begin(); i != Country.end(); i++)
-
-    {
-
-        std::cout << (*i).first << "\t" << (*i).second
-
-                  << std::endl;
-
-    }
-
-    return 0;
-
+    for(int n=0; n<10; ++n)
+        std::cout << "Output from thread " << id << '\n';
+}
+int main()
+{
+    std::thread t1(f, 1); // launch thread executiong function f() with argument 1
+    std::thread t2(f, 2), t3(f, 3); // two more threads, also executing f()
+    t1.join(); t2.join(); t3.join(); // wait for all three threads to finish before ending main()
 }

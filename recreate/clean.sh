@@ -21,6 +21,9 @@ if [ -f *.txt ]; then
     rm -f *.txt
 fi
 
+# Check if has any callgrind.out file then remove
+rm -f ./callgrind.out.*
+
 # Base directory containing test_case_x_folder directories
 base_dir="/home/shanghuang/Documents/Code related/SoftwareBugDetectionUsingCallGraphReferences/recreate/test_cases"
 # Loop through each test_case_x_folder directory
@@ -38,6 +41,6 @@ do
 done
 
 # Delete the results images in the result folder
-rm -f results/*.png
+# rm -f results/*.png
 
 echo "All test cases cleaned up."

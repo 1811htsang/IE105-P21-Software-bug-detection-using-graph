@@ -1,4 +1,7 @@
 #include <bits/stdc++.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 using namespace std;
 
 bool isPrime(int n)
@@ -12,5 +15,21 @@ bool isPrime(int n)
 }
 int main() {
     cout << isPrime(23939);
+
+    // create subprocess for test case
+    __pid_t pid = fork();
+    if (pid == 0) {
+        // child process
+        printf("Child process: %d\n", getpid());
+        exit(0);
+    } else if (pid < 0) {
+        // fork failed
+        cout << "Fork failed" << endl;
+        return 1;
+    } else {
+        // parent process
+        printf("Parent process: %d\n", getpid());
+        wait(NULL); // wait for child process to finish
+    }
     return 0;
 }

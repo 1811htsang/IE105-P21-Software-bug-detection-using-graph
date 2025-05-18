@@ -1,53 +1,30 @@
-#include <cstring>
-
 #include <iostream>
+#include <thread>
 
-#include <cstdlib>
+int x = 0;
 
-#define ll long long
-
-using namespace std;
-
- 
-
-/* 
-
- * Recursive function to find Fibonnaci Numbers
-
- */
-
-ll fibo_recur(int n)
-
-{
-
-    if (n == 1 || n == 2)
-
-        return 1;
-
-    else
-
-        return fibo_recur(n - 1) + fibo_recur(n - 2);;
-
+void print_x() {
+  std::cerr << "x is " << x << std::endl;
 }
 
-/* 
+void set_x(int new_x) {
+  x = new_x;
+}
 
- * Main
+void thread1() {
+  print_x();
+}
 
- */
+void thread2() {
+  set_x(1);
+}
 
-int main()
+int main() {
+  std::thread t1(thread1);
+  std::thread t2(thread2);
 
-{
+  t1.join();
+  t2.join();
 
-    int n;
-
-        cout<<"Enter the integer n to find nth fibonnaci no.(0 to exit): ";
-
-        n = 15;
-
-        cout<<fibo_recur(n)<<endl;
-
-    return 0;
-
+  return 0;
 }
