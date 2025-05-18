@@ -58,6 +58,3 @@ valgrind --tool=memcheck ./filename &>> valgrind_output.txt
 ---
 
 - This folder contains dataset related from [bugnet](https://huggingface.co/datasets/alexjercan/bugnet) and self-generated from example of `IE105-D-12` and `IE105-D-13` (the author is not sure about the dataset, but it is used to test the tool so maybe it is still acceptable). God bless the author. There is also a .zip dataset named `NIST-Juliet-Cpp-Test-Suite-2017` located in this folder, but it is not used in the project due to some issue and uncertainty about the dataset platform so it has been removed. 
-
-
-

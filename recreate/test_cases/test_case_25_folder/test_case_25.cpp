@@ -2,7 +2,7 @@
 #include <iostream>
 void f(int id)
 {
-    for(int n=0; n<10; ++n)
+    for(int n=0; n<2; ++n)
         std::cout << "Output from thread " << id << '\n';
 }
 int main()
