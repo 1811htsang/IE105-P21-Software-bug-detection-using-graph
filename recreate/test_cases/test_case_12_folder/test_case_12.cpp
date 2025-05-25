@@ -1,5 +1,7 @@
 #include "stdio.h"
 #include <stdlib.h>
+#include <iostream>
+using namespace std;
 
 void scope1();
 void scope2();
@@ -69,6 +71,8 @@ void scope6() {
 
 void A() {
   printf("A\n");
+  int i;
+  cout << (i++) * (++i) - (i--);
 }
 
 void B() {
